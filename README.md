@@ -105,8 +105,7 @@ falta realizar ninguna verificación). Utilizaremos este servicio provisional te
 gestión completa de usuarios esté implementada en la próxima entrega. En ese momento, se reemplazará
 **ServicioAutorizacionProvisorio** por un servicio de autorización definitivo que verificará adecuadamente si
 el usuario tiene el permiso por el cual se está consultando.
-Para acceder a los repositorios usaremos inversión de dependencia, por lo tanto, se deben definir en este
-proyecto las interfaces necesarias para trabajar con ellos.
+Para acceder a los repositorios usaremos inversión de dependencia, por lo tanto, se deben definir en este proyecto las interfaces necesarias para trabajar con ellos.
 Definir también en este proyecto las excepciones mencionadas anteriormente que serán lanzadas por los
 repositorios y por el servicio de autorización.
 Codificar los casos de uso para realizar altas, bajas y modificaciones en las entidades **Expediente** y
@@ -121,12 +120,8 @@ un expediente, se deben eliminar también todos los trámites asociados a dicho 
 Se debe garantizar que para las operaciones de alta, baja y modificación se verifique la autorización del
 usuario antes de proceder. Por lo tanto, el método Ejecutar de estos casos de uso deberá recibir también el
 Id del usuario como parámetro.
-Además, se debe implementar un caso de uso que permita la consulta de un expediente junto con todos
-sus trámites, utilizando el Id del expediente como referencia.
-Asimismo, se debe desarrollar un caso de uso para listar todos los expedientes (sin incluir sus trámites) y
-otro para listar todos los trámites en el sistema que posean una etiqueta específica. Por ejemplo,
-podríamos querer listar todos los trámites de tipo "Resolución" que existen en el sistema,
-independientemente del expediente al que pertenezcan.
+Además, se debe implementar un caso de uso que permita la consulta de un expediente junto con todos sus trámites, utilizando el Id del expediente como referencia.
+Asimismo, se debe desarrollar un caso de uso para listar todos los expedientes (sin incluir sus trámites) y otro para listar todos los trámites en el sistema que posean una etiqueta específica. Por ejemplo, podríamos querer listar todos los trámites de tipo "Resolución" que existen en el sistema, independientemente del expediente al que pertenezcan.
 Para llevar a cabo el cambio automático del estado de un expediente, se puede emplear la siguiente
 estrategia: desarrollar un servicio que, a partir del Id de un expediente, recupere la etiqueta de su último
 trámite. Basándose en esta información y conforme a las especificaciones detalladas en este documento,
