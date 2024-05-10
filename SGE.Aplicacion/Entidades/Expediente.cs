@@ -7,11 +7,11 @@ public class Expediente
     // Preguntar sobre ID Expediente
     public int Id { get; }
     public string? Caratula { get; set; }
-    public DateTime FechaCreacion { get; }
-    public DateTime FechaUltimaModificacion { get; set; }
-    public int UltimaModificacionUserId { get; set; }
+    public DateTime FechaHoraCreacion { get; }
+    public DateTime FechaHoraUltimaModificacion { get; set; }
+    public int IdUsuarioUltimaModificacion { get; set; }
     public EstadoExpediente Estado { get; set; }
-    
+
     public Expediente()
     {
 
