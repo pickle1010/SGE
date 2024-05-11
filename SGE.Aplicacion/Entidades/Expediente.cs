@@ -4,7 +4,7 @@ namespace SGE.Aplicacion;
 
 public class Expediente
 {
-    // Preguntar sobre ID Expediente
+    // Preguntar sobre ID Expediente.
     public int Id { get; }
     public string? Caratula { get; set; }
     public DateTime FechaHoraCreacion { get; }
