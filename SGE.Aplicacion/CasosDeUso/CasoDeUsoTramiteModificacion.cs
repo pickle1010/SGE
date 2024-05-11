@@ -16,6 +16,7 @@ public class CasoDeUsoTramiteModificacion(ITramiteRepositorio repo, TramiteValid
             throw new ValidacionException(mensajeError);
         }
         tramite.FechaHoraUltimaModificacion = DateTime.Now;
+        tramite.IdUsuarioUltimaModificacion = idUsuario;
         repo.Modificar(tramite);
     }
 }
