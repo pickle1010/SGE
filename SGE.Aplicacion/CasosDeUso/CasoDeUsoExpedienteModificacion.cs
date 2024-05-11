@@ -15,6 +15,9 @@ public class CasoDeUsoExpedienteModificacion(IExpendienteRepositorio repo, Exped
         {
             throw new ValidacionException(mensajeError);
         }
+        if(repo.ConsultarPorID(expediente.Id) == null){
+            throw new RepositorioException($"No existe expediente que tenga el id #{expediente.Id}");
+        }
         expediente.FechaHoraUltimaModificacion = DateTime.Now;
         expediente.IdUsuarioUltimaModificacion = idUsuario;
         repo.Modificar(expediente);
