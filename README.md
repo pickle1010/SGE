@@ -11,7 +11,7 @@ Se trabajará con dos entidades fundamentales: **Expediente** y **Trámite**. Am
 Cada expediente y trámite estará caracterizado por una propiedad Id única, lo que facilitará su identificación entre otras instancias del mismo tipo. Para mantener la separación en la persistencia de expedientes y trámites, será esencial establecer una relación que permita determinar qué trámites pertenecen a qué expedientes. A tal efecto, se empleará una propiedad denominada **ExpedienteId** en la clase **Trámite**, destinada a asociar un trámite a un expediente específico.
 
 Los atributos que definirán un expediente comprenderán:
-- El Id del trámite, un identificador numérico único
+- El Id del expediente, un identificador numérico único
 - La carátula, texto ingresado por el usuario
 - La fecha y hora de creación
 - La fecha y hora de la última modificación
