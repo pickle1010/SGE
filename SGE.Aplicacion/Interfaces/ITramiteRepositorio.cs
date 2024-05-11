@@ -6,4 +6,5 @@ public interface ITramiteRepositorio
     void Eliminar(int id);
     void Modificar(Tramite tramite);
     List<Tramite> ConsultarPorEtiqueta(EtiquetaTramite etiqueta);
+    List<Expediente> ConsultaPorExpediente(int ExpedienteID);
 }
