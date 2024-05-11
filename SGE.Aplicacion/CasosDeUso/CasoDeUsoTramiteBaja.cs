@@ -2,7 +2,7 @@
 
 public class CasoDeUsoTramiteBaja(ITramiteRepositorio repo, TramiteValidador validador, IServicioAutorizacion servicioAutorizacion)
 {
-    public void Ejecutar(Tramite tramite, int idUsuario)
+    public void Ejecutar(int idTramite, int idUsuario)
     {
         if (idUsuario <= 0)
         {
@@ -11,9 +11,8 @@ public class CasoDeUsoTramiteBaja(ITramiteRepositorio repo, TramiteValidador val
         if (!servicioAutorizacion.PoseeElPermiso(idUsuario, Permiso.TramiteAlta)){
             throw new AutorizacionException($"El usuario #{idUsuario} no tiene permiso para realizar altas de Tramite");
         }
-        if (!validador.Validar(tramite, out string mensajeError))
-        {
-            throw new ValidacionException(mensajeError);
+        if(repo.ConsultarPorId(idTramite) == null){
+            throw new RepositorioException($"No existe tramite que tenga el id #{idTramite}");
         }
         repo.Eliminar(idUsuario);
     }

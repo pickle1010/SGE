@@ -15,7 +15,11 @@ public class CasoDeUsoTramiteModificacion(ITramiteRepositorio repo, TramiteValid
         {
             throw new ValidacionException(mensajeError);
         }
+        if(repo.ConsultarPorId(tramite.Id) == null){
+            throw new RepositorioException($"No existe tramite que tenga el id #{tramite.Id}");
+        }
         tramite.FechaHoraUltimaModificacion = DateTime.Now;
+        tramite.IdUsuarioUltimaModificacion = idUsuario;
         repo.Modificar(tramite);
     }
 }
