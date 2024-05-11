@@ -15,7 +15,7 @@ public class Expediente
     public Expediente(string caratula) {
         Caratula = caratula;
     }
-    
+
     public override string ToString()
     {
         return $"(Id:{Id}) {Caratula}, Estado:{Estado}, Creado:{FechaHoraCreacion}, Modificado por ultima vez:{(FechaHoraUltimaModificacion != null ? (FechaHoraUltimaModificacion + " por Usuario #" + IdUsuarioUltimaModificacion) : "sin modificaciones")}";

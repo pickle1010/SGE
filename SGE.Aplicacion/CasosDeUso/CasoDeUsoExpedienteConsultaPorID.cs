@@ -8,7 +8,7 @@ public class CasoDeUsoExpedienteConsultaPorID(IExpendienteRepositorio repoExpedi
         if(expediente == null){
             throw new RepositorioException($"No existe expediente que tenga el id #{expedienteId}");
         }
-        expediente.Tramites = repoTramite.ConsultaPorExpediente(expedienteId);
+        expediente.Tramites = repoTramite.ConsultarPorExpediente(expedienteId);
         return expediente;
     }
 }
