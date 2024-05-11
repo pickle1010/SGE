@@ -4,16 +4,16 @@ namespace SGE.Aplicacion;
 
 public class Expediente
 {
-    // Preguntar sobre ID Expediente
-    public int Id { get; }
-    public string? Caratula { get; set; }
-    public DateTime FechaHoraCreacion { get; }
-    public DateTime FechaHoraUltimaModificacion { get; set; }
-    public int IdUsuarioUltimaModificacion { get; set; }
+    public int Id { get; set; }
+    public string Caratula { get; set; }
     public EstadoExpediente Estado { get; set; }
+    public DateTime FechaHoraCreacion { get; set; }
+    public DateTime? FechaHoraUltimaModificacion { get; set; }
+    public int? IdUsuarioUltimaModificacion { get; set; }
 
-    public Expediente()
+    public Expediente() { }
+    public override string ToString()
     {
-
+        return $"(Id:{Id}) {Caratula}, Estado:{Estado}, Creado:{FechaHoraCreacion}, Modificado por ultima vez:{(FechaHoraUltimaModificacion != null ? (FechaHoraUltimaModificacion + " por Usuario #" + IdUsuarioUltimaModificacion) : "sin modificaciones")}";
     }
 }

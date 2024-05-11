@@ -1,6 +1,23 @@
-﻿namespace SGE.Aplicacion;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class CasoDeUsoExpedienteAlta
+namespace SGE.Aplicacion;
+
+public class CasoDeUsoExpedienteAlta(IExpendienteRepositorio repo, ExpedienteValidador validador, IServicioAutorizacion servicioAutorizacion)
 {
-
+    public void Ejecutar(Expediente expediente, int idUsuario)
+    {
+        if (idUsuario <= 0)
+        {
+            throw new ArgumentException("El Id del usuario debe ser mayor que 0", nameof(idUsuario));
+        }
+        if (!servicioAutorizacion.PoseeElPermiso(idUsuario, Permiso.ExpedienteAlta)){
+            throw new AutorizacionException($"El usuario #{idUsuario} no tiene permiso para realizar altas de expedientes");
+        }
+        if (!validador.Validar(expediente, out string mensajeError))
+        {
+            throw new ValidacionException(mensajeError);
+        }
+        expediente.FechaHoraCreacion = DateTime.Now;
+        repo.Agregar(expediente);
+    }
 }
