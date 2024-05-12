@@ -15,7 +15,7 @@ public class CasoDeUsoExpedienteBaja(IExpendienteRepositorio repoExpediente, ITr
         if(repoExpediente.ConsultarPorID(expedienteId) == null){
             throw new RepositorioException($"No existe expediente que tenga el id #{expedienteId}");
         }
-        foreach (Tramite tramite in repoTramite.ConsultaPorExpediente(expedienteId))
+        foreach (Tramite tramite in repoTramite.ConsultarPorExpediente(expedienteId))
         {
             repoTramite.Eliminar(expedienteId);
         }

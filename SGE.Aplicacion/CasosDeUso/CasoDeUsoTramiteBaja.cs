@@ -1,6 +1,6 @@
 ﻿namespace SGE.Aplicacion;
 
-public class CasoDeUsoTramiteBaja(ITramiteRepositorio repo, TramiteValidador validador, IServicioAutorizacion servicioAutorizacion)
+public class CasoDeUsoTramiteBaja(ITramiteRepositorio repo, IServicioAutorizacion servicioAutorizacion)
 {
     public void Ejecutar(int idTramite, int idUsuario)
     {
