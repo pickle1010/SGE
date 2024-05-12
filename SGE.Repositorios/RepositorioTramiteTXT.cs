@@ -16,51 +16,84 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
 
     private List<Tramite> CargarTramites()
     {
-        List<Expediente> expedientes = new List<Expediente>();
-        using StreamReader sr = new StreamReader(DireccionTXT, true);
-        while(!sr.EndOfStream)
+        List<Tramite> tramites = new List<Tramite>();
+        var lineasArchivo = File.ReadAllLines(DireccionTXT); 
+        foreach (var linea in lineasArchivo)
         {
-            string[]? atributos = sr.ReadLine()?.Split(',');
-            if(atributos != null){
-                Expediente expediente = new Expediente(atributos[1]);
-                expediente.Id = int.Parse(atributos[0]);
-                expediente.Estado = (EstadoExpediente) Enum.Parse(typeof(EstadoExpediente), atributos[2]);
-                expediente.FechaHoraCreacion = DateTime.Parse(atributos[3]);
-                expediente.FechaHoraUltimaModificacion = DateTime.Parse(atributos[4]);
-                expediente.IdUsuarioUltimaModificacion = int.Parse(atributos[5]);
-                expedientes.Add(expediente);
-            }
+            string[] atributos = linea.Split(',');
+            Tramite tramite = new Tramite(atributos[3]);
+            tramite.Id = int.Parse(atributos[0]);
+            tramite.ExpedienteId = int.Parse(atributos[1]);
+            tramite.Etiqueta = (EtiquetaTramite) Enum.Parse(typeof(EtiquetaTramite), atributos[2]);
+            tramite.FechaHoraCreacion = DateTime.Parse(atributos[4]);
+            tramite.FechaHoraUltimaModificacion = DateTime.Parse(atributos[5]);
+            tramite.IdUsuarioUltimaModificacion = int.Parse(atributos[6]);
+            tramites.Add(tramite);
         }
-        return expedientes;
+        return tramites;
     }
 
-    public void Agregar(Expediente expediente)
+    public void Agregar(Tramite tramite)
     {
-        expediente.Id = ProximoId++;
-        Expedientes.Add(expediente);
-        GuardarExpediente(expediente);
+        tramite.Id = ProximoId++;
+        Tramites.Add(tramite);
+        GuardarTramite(tramite);
     }
 
-    public void GuardarExpediente(Expediente expediente)
+    private void GuardarTramite(Tramite tramite)
     {
-        using StreamWriter sw = new StreamWriter(DireccionTXT, true);
-        sw.Write($"{expediente.Id},{expediente.Caratula},{expediente.Estado},{expediente.FechaHoraCreacion},{expediente.FechaHoraUltimaModificacion},{expediente.IdUsuarioUltimaModificacion}");
+        using (StreamWriter sw = File.AppendText(DireccionTXT)){
+            sw.WriteLine($"{tramite.Id},{tramite.ExpedienteId},{tramite.Etiqueta},{tramite.Contenido},{tramite.FechaHoraCreacion},{tramite.FechaHoraUltimaModificacion},{tramite.IdUsuarioUltimaModificacion}");
+        }
     }
-
-    public Expediente ConsultarPorID(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public List<Expediente> ConsultarTodos() => Expedientes;
 
     public void Eliminar(int id)
     {
-        throw new NotImplementedException();
+        var lineas = File.ReadAllLines(DireccionTXT).ToList();
+        lineas.RemoveAll(linea => int.Parse(linea.Split(',')[0]) == id);
+        File.WriteAllLines(DireccionTXT, lineas);
+        Tramites.RemoveAll(tramite => tramite.Id == id); 
     }
 
-    public void Modificar(Expediente expediente)
+    public void Modificar(Tramite tramite)
     {
-        throw new NotImplementedException();
+        int indice = Tramites.FindIndex(t => t.Id == tramite.Id);
+        Tramites[indice] = tramite;
+        List<string> lineas = new List<string>();
+        foreach(Tramite t in Tramites){
+            string linea = $"{tramite.Id},{tramite.ExpedienteId},{tramite.Etiqueta},{tramite.Contenido},{tramite.FechaHoraCreacion},{tramite.FechaHoraUltimaModificacion},{tramite.IdUsuarioUltimaModificacion}"; 
+            lineas.Add(linea);
+        } 
+        File.WriteAllLines(DireccionTXT, lineas);
     } 
+
+    public List<Tramite> ConsultarPorEtiqueta(EtiquetaTramite etiqueta)
+    {
+        List<Tramite> tramitesConEtiqueta = new List<Tramite>();
+        foreach(Tramite tramite in Tramites){
+            if(tramite.Etiqueta == etiqueta){
+                tramitesConEtiqueta.Add(tramite);
+            }
+        }
+        return tramitesConEtiqueta;
+    }
+
+    public Tramite? ConsultarPorId(int id){
+        foreach(Tramite tramite in Tramites){
+            if(tramite.Id == id){
+                return tramite;
+            }
+        }
+        return null;    
+    }
+
+    public List<Tramite> ConsultarPorExpediente(int expedienteID){
+        List<Tramite> tramitesDelExpedienteID = new List<Tramite>();
+        foreach(Tramite tramite in Tramites){
+            if(tramite.ExpedienteId == expedienteID){
+                tramitesDelExpedienteID.Add(tramite);
+            }
+        }
+        return tramitesDelExpedienteID; 
+    }
 }

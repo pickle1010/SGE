@@ -45,7 +45,7 @@ public class RepositorioExpedienteTXT : IExpendienteRepositorio
     public void GuardarExpediente(Expediente expediente)
     {
         using StreamWriter sw = new StreamWriter(DireccionTXT, true);
-        sw.Write($"{expediente.Id},{expediente.Caratula},{expediente.Estado},{expediente.FechaHoraCreacion},{expediente.FechaHoraUltimaModificacion},{expediente.IdUsuarioUltimaModificacion}");
+        sw.WriteLine($"{expediente.Id},{expediente.Caratula},{expediente.Estado},{expediente.FechaHoraCreacion},{expediente.FechaHoraUltimaModificacion},{expediente.IdUsuarioUltimaModificacion}");
     }
 
     public Expediente ConsultarPorID(int id)
