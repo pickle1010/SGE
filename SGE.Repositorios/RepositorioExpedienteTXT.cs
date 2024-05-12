@@ -45,23 +45,44 @@ public class RepositorioExpedienteTXT : IExpendienteRepositorio
     public void GuardarExpediente(Expediente expediente)
     {
         using StreamWriter sw = new StreamWriter(DireccionTXT, true);
-        sw.Write($"{expediente.Id},{expediente.Caratula},{expediente.Estado},{expediente.FechaHoraCreacion},{expediente.FechaHoraUltimaModificacion},{expediente.IdUsuarioUltimaModificacion}");
+        sw.WriteLine($"{expediente.Id},{expediente.Caratula},{expediente.Estado},{expediente.FechaHoraCreacion},{expediente.FechaHoraUltimaModificacion},{expediente.IdUsuarioUltimaModificacion}");
+    }
+    
+    public void SobreescribirArchivoExpedientes(List<Expediente> lista)
+    {
+        //Fijarse implementar uyn recorrido en el TXT para no sobreescribir todo.
+        using StreamWriter sw = new StreamWriter(DireccionTXT, false); //el writer en false me sobreescribe el archivo
+        foreach(Expediente expediente in lista)
+        {
+        sw.WriteLine($"{expediente.Id},{expediente.Caratula},{expediente.Estado},{expediente.FechaHoraCreacion},{expediente.FechaHoraUltimaModificacion},{expediente.IdUsuarioUltimaModificacion}");
+        }
     }
 
-    public Expediente ConsultarPorID(int id)
+    public Expediente? ConsultarPorID(int id)
     {
-        throw new NotImplementedException();
+        foreach(Expediente expediente in Expedientes)
+        {
+            if (expediente.Id == id) return expediente;
+        }
+        return null;
     }
 
     public List<Expediente> ConsultarTodos() => Expedientes;
 
-    public void Eliminar(int id)
+    public void Eliminar(int id) 
     {
-        throw new NotImplementedException();
+        foreach(Expediente expediente in Expedientes)
+        {
+            if (expediente.Id == id)
+            {
+                Expedientes.Remove(expediente);
+                SobreescribirArchivoExpedientes(Expedientes); //REVISAR
+                break;
+            }
+        }
     }
 
     public void Modificar(Expediente expediente)
     {
-        throw new NotImplementedException();
     }
 }
