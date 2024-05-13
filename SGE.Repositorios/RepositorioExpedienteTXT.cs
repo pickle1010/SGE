@@ -48,8 +48,13 @@ public class RepositorioExpedienteTXT : IExpendienteRepositorio
 
     public Expediente? ConsultarPorID(int id) => Expedientes.Find(e => e.Id == id) ?? throw new RepositorioException($"No existe expediente que tenga el id #{expedienteId}");
 
-    public List<Expediente> ConsultarTodos() => Expedientes ?? throw new RepositorioException($"No existen expedientes");
-
+    public List<Expediente> ConsultarTodos(){
+        if (Expedientes.Count == 0)
+            throw new RepositorioException($"No existen expedientes");
+        else
+            return Expedientes;
+    }
+    
     public void Eliminar(int id) 
     {
         int indice = Expedientes.FindIndex(e => e.Id == id);
