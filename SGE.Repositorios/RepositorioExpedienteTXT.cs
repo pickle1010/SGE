@@ -55,15 +55,17 @@ public class RepositorioExpedienteTXT : IExpendienteRepositorio
             return Expedientes;
     }
     
-    public void Eliminar(int id) 
+    public Expediente Eliminar(int id) 
     {
         int indice = Expedientes.FindIndex(e => e.Id == id);
         if(indice >= 0)
         {
+            Expediente expediente = Expedientes[indice];
             Expedientes.RemoveAt(indice);
             List<String> lineas = File.ReadAllLines(DireccionTXT).ToList();
             lineas.RemoveAt(indice);
             File.WriteAllLines(DireccionTXT, lineas);
+            return expediente;
         }
         {
             throw new RepositorioException($"No existe expediente que tenga el id #{id}");
