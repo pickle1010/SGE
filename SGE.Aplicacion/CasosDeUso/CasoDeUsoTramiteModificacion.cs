@@ -1,6 +1,6 @@
 ﻿namespace SGE.Aplicacion;
 
-public class CasoDeUsoTramiteModificacion(ITramiteRepositorio repo, TramiteValidador validador, IServicioAutorizacion servicioAutorizacion)
+public class CasoDeUsoTramiteModificacion(ITramiteRepositorio repo, TramiteValidador validador, IServicioAutorizacion servicioAutorizacion, ServicioActualizacionEstado servicioActualizacion)
 {
     public void Ejecutar(Tramite tramite, int idUsuario)
     {
@@ -18,7 +18,7 @@ public class CasoDeUsoTramiteModificacion(ITramiteRepositorio repo, TramiteValid
         tramite.FechaHoraUltimaModificacion = DateTime.Now;
         tramite.IdUsuarioUltimaModificacion = idUsuario;
         repo.Modificar(tramite);
-        servicioActualizacion.ActualizarEstado(tramite.expedienteId);
+        servicioActualizacion.ActualizarEstado(tramite.ExpedienteId); //IDEM ANTERIORES, aca está inyectado pero confunde cuando quiero invocarlo en Program 
     }
 }
 

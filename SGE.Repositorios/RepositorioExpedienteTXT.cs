@@ -46,7 +46,7 @@ public class RepositorioExpedienteTXT : IExpendienteRepositorio
         sw.WriteLine(FormatExpediente(expediente));
     }
 
-    public Expediente? ConsultarPorID(int id) => Expedientes.Find(e => e.Id == id) ?? throw new RepositorioException($"No existe expediente que tenga el id #{expedienteId}");
+    public Expediente ConsultarPorID(int id) => Expedientes.Find(e => e.Id == id) ?? throw new RepositorioException($"No existe expediente que tenga el id #{id}");
 
     public List<Expediente> ConsultarTodos(){
         if (Expedientes.Count == 0)
@@ -75,7 +75,7 @@ public class RepositorioExpedienteTXT : IExpendienteRepositorio
         int indice = Expedientes.FindIndex(e => e.Id == expediente.Id);
         if(indice >= 0)
         {
-            expediente.FechaHoraCreacion = Expedientes[indice];
+            expediente.FechaHoraCreacion = Expedientes[indice].FechaHoraCreacion; //Habia Incompatibilidad de tipos, no recuerdo si esto estaba corregido
             Expedientes[indice] = expediente;
             string[] lineas = File.ReadAllLines(DireccionTXT);
             lineas[indice] = FormatExpediente(expediente);
