@@ -1,6 +1,6 @@
 ﻿namespace SGE.Aplicacion;
 
-public class CasoDeUsoTramiteAlta(ITramiteRepositorio repo, TramiteValidador validador, IServicioAutorizacion servicioAutorizacion)
+public class CasoDeUsoTramiteAlta(ITramiteRepositorio repo, TramiteValidador validador, IServicioAutorizacion servicioAutorizacion, IServicioActualizacionEstado servicioActualizacionEstado)
 {
     public void Ejecutar(Tramite tramite, int idUsuario)
     {
@@ -19,7 +19,6 @@ public class CasoDeUsoTramiteAlta(ITramiteRepositorio repo, TramiteValidador val
         tramite.FechaHoraUltimaModificacion = DateTime.Now;
         tramite.IdUsuarioUltimaModificacion = idUsuario; //Para tener control del usuario que realizó el alta del trámite
         repo.Agregar(tramite);
-        //ServicioActualizacionEstado servicioActualizacion = new ServicioActualizacionEstado(); //REVISAR, FIJARSE SI HAY QUE CREAR UNA NUEVA INTERFAZ
-        //servicioActualizacion.ActualizarEstado(tramite.ExpedienteId);
+        servicioActualizacionEstado.ActualizarEstado(tramite.ExpedienteId);
     }
 }

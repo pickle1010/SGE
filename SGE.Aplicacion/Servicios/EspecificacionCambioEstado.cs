@@ -1,6 +1,6 @@
 ﻿namespace SGE.Aplicacion;
 
-public class EspecificacionCambioEstado
+public class EspecificacionCambioEstado : IEspecificacionCambioEstado
 {
     public void CambiarEstado(Expediente expediente, EtiquetaTramite etiqueta)
     {

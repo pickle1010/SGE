@@ -1,6 +1,6 @@
 ﻿namespace SGE.Aplicacion;
 
-public class ServicioActualizacionEstado(EspecificacionCambioEstado especificacion, IExpendienteRepositorio repoExpediente, ITramiteRepositorio repoTramite)
+public class ServicioActualizacionEstado(IEspecificacionCambioEstado especificacion, IExpendienteRepositorio repoExpediente, ITramiteRepositorio repoTramite) : IServicioActualizacionEstado
 {
     public void ActualizarEstado(int expedienteId)
     {

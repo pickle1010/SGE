@@ -1,6 +1,6 @@
 ﻿namespace SGE.Aplicacion;
 
-public class CasoDeUsoTramiteBaja(ITramiteRepositorio repo, IServicioAutorizacion servicioAutorizacion)
+public class CasoDeUsoTramiteBaja(ITramiteRepositorio repo, IServicioAutorizacion servicioAutorizacion, IServicioActualizacionEstado servicioActualizacionEstado)
 {
     public void Ejecutar(int idTramite, int idUsuario)
     {
@@ -11,8 +11,7 @@ public class CasoDeUsoTramiteBaja(ITramiteRepositorio repo, IServicioAutorizacio
         if (!servicioAutorizacion.PoseeElPermiso(idUsuario, Permiso.TramiteAlta)){
             throw new AutorizacionException($"El usuario #{idUsuario} no tiene permiso para realizar altas de Tramite");
         }
-        int expedienteId = repo.ConsultarPorId(idTramite).ExpedienteId;
-        repo.Eliminar(idTramite);
-        //servicioActualizacion.ActualizarEstado(expedienteId); //MISMO PROBLEMA
+        int expedienteId = repo.Eliminar(idTramite).ExpedienteId;
+        servicioActualizacionEstado.ActualizarEstado(expedienteId);
     }
 }

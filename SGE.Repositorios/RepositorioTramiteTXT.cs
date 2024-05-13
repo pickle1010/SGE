@@ -47,14 +47,16 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
         }
     }
 
-    public void Eliminar(int id)
+    public Tramite Eliminar(int id)
     {
         int indice = Tramites.FindIndex(t => t.Id == id);
         if(indice >= 0){
+            Tramite tramite = Tramites[indice];
             Tramites.RemoveAt(indice);
             List<string> lineas = File.ReadAllLines(DireccionTXT).ToList(); 
             lineas.RemoveAt(indice);
-            File.WriteAllLines(DireccionTXT,lineas);      
+            File.WriteAllLines(DireccionTXT,lineas);
+            return tramite;      
         }
         {
             throw new RepositorioException($"No existe trámite que tenga el id #{id}");
