@@ -49,22 +49,30 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
 
     public void Eliminar(int id)
     {
-        var lineas = File.ReadAllLines(DireccionTXT).ToList();
-        lineas.RemoveAll(linea => int.Parse(linea.Split(',')[0]) == id);
-        File.WriteAllLines(DireccionTXT, lineas);
-        Tramites.RemoveAll(tramite => tramite.Id == id); 
+        int indice = Tramites.FindIndex(t => t.Id == id);
+        if(indice >= 0){
+            Tramites.RemoveAt(indice);
+            List<string> lineas = File.ReadAllLines(DireccionTXT).ToList(); 
+            lineas.RemoveAt(indice);
+            File.WriteAllLines(DireccionTXT,lineas);      
+        }
+        {
+            throw new RepositorioException($"No existe trámite que tenga el id #{id}");
+        }
     }
 
     public void Modificar(Tramite tramite)
     {
         int indice = Tramites.FindIndex(t => t.Id == tramite.Id);
-        Tramites[indice] = tramite;
-        List<string> lineas = new List<string>();
-        foreach(Tramite t in Tramites){
-            string linea = $"{tramite.Id},{tramite.ExpedienteId},{tramite.Etiqueta},{tramite.Contenido},{tramite.FechaHoraCreacion},{tramite.FechaHoraUltimaModificacion},{tramite.IdUsuarioUltimaModificacion}"; 
-            lineas.Add(linea);
-        } 
-        File.WriteAllLines(DireccionTXT, lineas);
+        if(indice >= 0){
+            Tramites[indice] = tramite;
+            string[] lineas = File.ReadAllLines(DireccionTXT);
+            lineas[indice] = $"{tramite.Id},{tramite.ExpedienteId},{tramite.Etiqueta},{tramite.Contenido},{tramite.FechaHoraCreacion},{tramite.FechaHoraUltimaModificacion},{tramite.IdUsuarioUltimaModificacion}";
+            File.WriteAllLines(DireccionTXT, lineas);
+        }
+        {
+            throw new RepositorioException($"No existe trámite que tenga el id #{tramite.Id}");
+        }
     } 
 
     public List<Tramite> ConsultarPorEtiqueta(EtiquetaTramite etiqueta)
@@ -78,13 +86,15 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
         return tramitesConEtiqueta;
     }
 
-    public Tramite? ConsultarPorId(int id){
+    public Tramite ConsultarPorId(int id){
         foreach(Tramite tramite in Tramites){
             if(tramite.Id == id){
                 return tramite;
             }
         }
-        return null;    
+        {
+            throw new RepositorioException($"No existe trámite que tenga el id #{id}");
+        }    
     }
 
     public List<Tramite> ConsultarPorExpediente(int expedienteID){
@@ -94,6 +104,11 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
                 tramitesDelExpedienteID.Add(tramite);
             }
         }
-        return tramitesDelExpedienteID; 
+        if(tramitesDelExpedienteID != null){
+            return tramitesDelExpedienteID;
+        }
+        {
+            throw new RepositorioException($"No existen trámites asociados al expediente con id #{expedienteID}");
+        } 
     }
 }

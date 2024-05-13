@@ -11,9 +11,6 @@ public class CasoDeUsoTramiteBaja(ITramiteRepositorio repo, IServicioAutorizacio
         if (!servicioAutorizacion.PoseeElPermiso(idUsuario, Permiso.TramiteAlta)){
             throw new AutorizacionException($"El usuario #{idUsuario} no tiene permiso para realizar altas de Tramite");
         }
-        if(repo.ConsultarPorId(idTramite) == null){
-            throw new RepositorioException($"No existe tramite que tenga el id #{idTramite}");
-        }
         repo.Eliminar(idUsuario);
     }
 }

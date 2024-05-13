@@ -17,7 +17,7 @@ public class CasoDeUsoExpedienteBaja(IExpendienteRepositorio repoExpediente, ITr
         }
         foreach (Tramite tramite in repoTramite.ConsultarPorExpediente(expedienteId))
         {
-            repoTramite.Eliminar(expedienteId);
+            repoTramite.Eliminar(tramite.Id);
         }
         repoExpediente.Eliminar(expedienteId);
     }

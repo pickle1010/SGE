@@ -16,6 +16,7 @@ public class CasoDeUsoTramiteAlta(ITramiteRepositorio repo, TramiteValidador val
             throw new ValidacionException(mensajeError);
         }
         tramite.FechaHoraCreacion = DateTime.Now;
+        tramite.FechaHoraUltimaModificacion = DateTime.Now;
         tramite.IdUsuarioUltimaModificacion = idUsuario; //Para tener control del usuario que realizó el alta del trámite
         repo.Agregar(tramite);
     }
