@@ -9,8 +9,8 @@ public class Expediente
     public EstadoExpediente Estado { get; set; }
     public List<Tramite>? Tramites { get; set; }
     public DateTime FechaHoraCreacion { get; set; }
-    public DateTime? FechaHoraUltimaModificacion { get; set; }
-    public int? IdUsuarioUltimaModificacion { get; set; }
+    public DateTime FechaHoraUltimaModificacion { get; set; }
+    public int IdUsuarioUltimaModificacion { get; set; }
 
     public Expediente(string caratula) {
         Caratula = caratula;
@@ -18,6 +18,6 @@ public class Expediente
 
     public override string ToString()
     {
-        return $"(Id:{Id}) {Caratula}, Estado:{Estado}, Creado:{FechaHoraCreacion}, Modificado por ultima vez:{(FechaHoraUltimaModificacion != null ? (FechaHoraUltimaModificacion + " por Usuario #" + IdUsuarioUltimaModificacion) : "sin modificaciones")}";
+        return $"(Id:{Id}) {Caratula}, Estado:{Estado}, Creado:{FechaHoraCreacion}, Modificado por ultima vez:{FechaHoraUltimaModificacion} por Usuario #{IdUsuarioUltimaModificacion}";
     }
 }
