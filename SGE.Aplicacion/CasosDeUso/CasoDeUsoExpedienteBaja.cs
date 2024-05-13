@@ -12,10 +12,10 @@ public class CasoDeUsoExpedienteBaja(IExpendienteRepositorio repoExpediente, ITr
         {
             throw new AutorizacionException($"El usuario #{idUsuario} no tiene permiso para realizar bajas de expedientes");
         }
+        repoExpediente.Eliminar(expedienteId);
         foreach (Tramite tramite in repoTramite.ConsultarPorExpediente(expedienteId))
         {
             repoTramite.Eliminar(tramite.Id);
         }
-        repoExpediente.Eliminar(expedienteId);
     }
 }
