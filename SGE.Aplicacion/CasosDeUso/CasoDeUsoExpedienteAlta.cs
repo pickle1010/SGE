@@ -18,6 +18,7 @@ public class CasoDeUsoExpedienteAlta(IExpendienteRepositorio repo, ExpedienteVal
             throw new ValidacionException(mensajeError);
         }
         expediente.FechaHoraCreacion = DateTime.Now;
+        expediente.FechaHoraUltimaModificacion = DateTime.Now;
         expediente.IdUsuarioUltimaModificacion = idUsuario; //Para tener control del usuario que realizó el alta del expediente
         repo.Agregar(expediente);
     }

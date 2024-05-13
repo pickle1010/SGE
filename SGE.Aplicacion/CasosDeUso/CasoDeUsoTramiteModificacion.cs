@@ -21,6 +21,7 @@ public class CasoDeUsoTramiteModificacion(ITramiteRepositorio repo, TramiteValid
         tramite.FechaHoraUltimaModificacion = DateTime.Now;
         tramite.IdUsuarioUltimaModificacion = idUsuario;
         repo.Modificar(tramite);
+        servicioActualizacion.ActualizarEstado(tramite.expedienteId);
     }
 }
 

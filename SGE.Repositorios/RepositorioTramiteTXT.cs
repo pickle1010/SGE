@@ -65,6 +65,7 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
     {
         int indice = Tramites.FindIndex(t => t.Id == tramite.Id);
         if(indice >= 0){
+            tramite.FechaHoraCreacion = Tramites[indice].FechaHoraCreacion;
             Tramites[indice] = tramite;
             string[] lineas = File.ReadAllLines(DireccionTXT);
             lineas[indice] = $"{tramite.Id},{tramite.ExpedienteId},{tramite.Etiqueta},{tramite.Contenido},{tramite.FechaHoraCreacion},{tramite.FechaHoraUltimaModificacion},{tramite.IdUsuarioUltimaModificacion}";
