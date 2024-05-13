@@ -12,9 +12,6 @@ public class CasoDeUsoExpedienteBaja(IExpendienteRepositorio repoExpediente, ITr
         {
             throw new AutorizacionException($"El usuario #{idUsuario} no tiene permiso para realizar bajas de expedientes");
         }
-        if(repoExpediente.ConsultarPorID(expedienteId) == null){
-            throw new RepositorioException($"No existe expediente que tenga el id #{expedienteId}");
-        }
         foreach (Tramite tramite in repoTramite.ConsultarPorExpediente(expedienteId))
         {
             repoTramite.Eliminar(tramite.Id);

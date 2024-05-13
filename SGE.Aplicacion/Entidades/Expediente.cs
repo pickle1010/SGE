@@ -14,6 +14,13 @@ public class Expediente
 
     public Expediente(string caratula) {
         Caratula = caratula;
+        Estado = EstadoExpediente.RecienIniciado;
+    }
+
+    public Expediente(string caratula, EstadoExpediente estado)
+    {
+        Caratula = caratula;
+        Estado = estado;
     }
 
     public override string ToString()
