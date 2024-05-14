@@ -12,6 +12,10 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
     {
         DireccionTXT = direccionTXT;        
         Tramites = CargarTramites();
+        if(Tramites.Count > 0)
+        {
+            ProximoId = Tramites.Last().Id + 1;
+        }
     }
 
     private List<Tramite> CargarTramites()
@@ -22,7 +26,7 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
             while(!sr.EndOfStream)
             {
                 string? linea = sr.ReadLine();
-                if(linea != null){
+                if(linea != null && linea.Length > 0){
                     string[] atributos = linea.Split(','); 
                     Tramite tramite = new Tramite(atributos[3]);
                     tramite.Id = int.Parse(atributos[0]);
@@ -41,18 +45,17 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
         return tramites;
     }
 
+    private string FormatTramite(Tramite t)
+    {
+        return $"{t.Id},{t.ExpedienteId},{t.Etiqueta},{t.Contenido},{t.FechaHoraCreacion},{t.FechaHoraUltimaModificacion},{t.IdUsuarioUltimaModificacion}";
+    }
+
     public void Agregar(Tramite tramite)
     {
         tramite.Id = ProximoId++;
         Tramites.Add(tramite);
-        GuardarTramite(tramite);
-    }
-
-    private void GuardarTramite(Tramite tramite)
-    {
-        using (StreamWriter sw = File.AppendText(DireccionTXT)){
-            sw.WriteLine($"{tramite.Id},{tramite.ExpedienteId},{tramite.Etiqueta},{tramite.Contenido},{tramite.FechaHoraCreacion},{tramite.FechaHoraUltimaModificacion},{tramite.IdUsuarioUltimaModificacion}");
-        }
+        using StreamWriter sw = new StreamWriter(DireccionTXT, true);
+        sw.WriteLine(FormatTramite(tramite));
     }
 
     public Tramite Eliminar(int id)
@@ -66,6 +69,7 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
             File.WriteAllLines(DireccionTXT,lineas);
             return tramite;      
         }
+        else 
         {
             throw new RepositorioException($"No existe trámite que tenga el id #{id}");
         }
@@ -78,10 +82,10 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
             tramite.FechaHoraCreacion = Tramites[indice].FechaHoraCreacion;
             Tramites[indice] = tramite;
             string[] lineas = File.ReadAllLines(DireccionTXT);
-            lineas[indice] = $"{tramite.Id},{tramite.ExpedienteId},{tramite.Etiqueta},{tramite.Contenido},{tramite.FechaHoraCreacion},{tramite.FechaHoraUltimaModificacion},{tramite.IdUsuarioUltimaModificacion}";
+            lineas[indice] = FormatTramite(tramite);
             File.WriteAllLines(DireccionTXT, lineas);
         }
-        {
+        else {
             throw new RepositorioException($"No existe trámite que tenga el id #{tramite.Id}");
         }
     } 
@@ -97,16 +101,7 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
         return tramitesConEtiqueta;
     }
 
-    public Tramite ConsultarPorId(int id){
-        foreach(Tramite tramite in Tramites){
-            if(tramite.Id == id){
-                return tramite;
-            }
-        }
-        {
-            throw new RepositorioException($"No existe trámite que tenga el id #{id}");
-        }    
-    }
+    public Tramite ConsultarPorId(int id) => Tramites.Find(t => t.Id == id) ?? throw new RepositorioException($"No existe trámite que tenga el id #{id}");
 
     public List<Tramite> ConsultarPorExpediente(int expedienteID){
         List<Tramite> tramitesDelExpedienteID = new List<Tramite>();
@@ -115,11 +110,13 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
                 tramitesDelExpedienteID.Add(tramite);
             }
         }
-        if(tramitesDelExpedienteID != null){
+        if(tramitesDelExpedienteID != null)
+        {
             return tramitesDelExpedienteID;
         }
+        else 
         {
             throw new RepositorioException($"No existen trámites asociados al expediente con id #{expedienteID}");
-        } 
+        }
     }
 }
