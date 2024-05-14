@@ -12,8 +12,7 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
     {
         DireccionTXT = direccionTXT;        
         Tramites = CargarTramites();
-        if(Tramites.Count > 0)
-        {
+        if(Tramites.Count > 0){
             ProximoId = Tramites.Last().Id + 1;
         }
     }
@@ -28,9 +27,8 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
                 string? linea = sr.ReadLine();
                 if(linea != null && linea.Length > 0){
                     string[] atributos = linea.Split(','); 
-                    Tramite tramite = new Tramite(atributos[3]);
+                    Tramite tramite = new Tramite(atributos[3],int.Parse(atributos[1]));
                     tramite.Id = int.Parse(atributos[0]);
-                    tramite.ExpedienteId = int.Parse(atributos[1]);
                     tramite.Etiqueta = (EtiquetaTramite) Enum.Parse(typeof(EtiquetaTramite), atributos[2]);
                     tramite.FechaHoraCreacion = DateTime.Parse(atributos[4]);
                     tramite.FechaHoraUltimaModificacion = DateTime.Parse(atributos[5]);
