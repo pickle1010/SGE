@@ -17,18 +17,26 @@ public class RepositorioTramiteTXT : ITramiteRepositorio
     private List<Tramite> CargarTramites()
     {
         List<Tramite> tramites = new List<Tramite>();
-        var lineasArchivo = File.ReadAllLines(DireccionTXT); 
-        foreach (var linea in lineasArchivo)
-        {
-            string[] atributos = linea.Split(',');
-            Tramite tramite = new Tramite(atributos[3]);
-            tramite.Id = int.Parse(atributos[0]);
-            tramite.ExpedienteId = int.Parse(atributos[1]);
-            tramite.Etiqueta = (EtiquetaTramite) Enum.Parse(typeof(EtiquetaTramite), atributos[2]);
-            tramite.FechaHoraCreacion = DateTime.Parse(atributos[4]);
-            tramite.FechaHoraUltimaModificacion = DateTime.Parse(atributos[5]);
-            tramite.IdUsuarioUltimaModificacion = int.Parse(atributos[6]);
-            tramites.Add(tramite);
+        if(Path.Exists(DireccionTXT)){
+            using StreamReader sr = new StreamReader(DireccionTXT, true);
+            while(!sr.EndOfStream)
+            {
+                string? linea = sr.ReadLine();
+                if(linea != null){
+                    string[] atributos = linea.Split(','); 
+                    Tramite tramite = new Tramite(atributos[3]);
+                    tramite.Id = int.Parse(atributos[0]);
+                    tramite.ExpedienteId = int.Parse(atributos[1]);
+                    tramite.Etiqueta = (EtiquetaTramite) Enum.Parse(typeof(EtiquetaTramite), atributos[2]);
+                    tramite.FechaHoraCreacion = DateTime.Parse(atributos[4]);
+                    tramite.FechaHoraUltimaModificacion = DateTime.Parse(atributos[5]);
+                    tramite.IdUsuarioUltimaModificacion = int.Parse(atributos[6]);
+                    tramites.Add(tramite);
+                }
+            }
+        }
+        else {
+            File.Create(DireccionTXT).Close();
         }
         return tramites;
     }

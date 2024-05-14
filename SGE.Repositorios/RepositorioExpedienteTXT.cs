@@ -1,6 +1,7 @@
 ﻿namespace SGE.Repositorios;
 
 using System.Collections.Generic;
+using Microsoft.Win32.SafeHandles;
 using SGE.Aplicacion;
 
 public class RepositorioExpedienteTXT : IExpendienteRepositorio
@@ -13,22 +14,34 @@ public class RepositorioExpedienteTXT : IExpendienteRepositorio
     {
         DireccionTXT = direccionTXT;        
         Expedientes = CargarExpedientes();
+        if(Expedientes.Count > 0){
+            ProximoId = Expedientes.Last().Id + 1;
+        }
+
     }
 
     private List<Expediente> CargarExpedientes()
     {
         List<Expediente> expedientes = new List<Expediente>();
-        string[] lineas = File.ReadAllLines(DireccionTXT);
-        foreach (string linea in lineas)
-        {
-            string[] atributos = linea.Split(',');
-            Expediente expediente = new Expediente(atributos[1]);
-            expediente.Id = int.Parse(atributos[0]);
-            expediente.Estado = (EstadoExpediente) Enum.Parse(typeof(EstadoExpediente), atributos[2]);
-            expediente.FechaHoraCreacion = DateTime.Parse(atributos[3]);
-            expediente.FechaHoraUltimaModificacion = DateTime.Parse(atributos[4]);
-            expediente.IdUsuarioUltimaModificacion = int.Parse(atributos[5]);
-            expedientes.Add(expediente);
+        if(Path.Exists(DireccionTXT)){
+            using StreamReader sr = new StreamReader(DireccionTXT, true);
+            while(!sr.EndOfStream)
+            {
+                string? linea = sr.ReadLine();
+                if(linea != null && linea.Length > 0){
+                    string[] atributos = linea.Split(',');
+                    Expediente expediente = new Expediente(atributos[1]);
+                    expediente.Id = int.Parse(atributos[0]);
+                    expediente.Estado = (EstadoExpediente) Enum.Parse(typeof(EstadoExpediente), atributos[2]);
+                    expediente.FechaHoraCreacion = DateTime.Parse(atributos[3]);
+                    expediente.FechaHoraUltimaModificacion = DateTime.Parse(atributos[4]);
+                    expediente.IdUsuarioUltimaModificacion = int.Parse(atributos[5]);
+                    expedientes.Add(expediente);
+                }
+            }
+        }
+        else{
+            File.Create(DireccionTXT).Close();
         }
         return expedientes;
     }
@@ -83,7 +96,7 @@ public class RepositorioExpedienteTXT : IExpendienteRepositorio
             lineas[indice] = FormatExpediente(expediente);
             File.WriteAllLines(DireccionTXT, lineas);
         }
-        {
+        else{
             throw new RepositorioException($"No existe expediente que tenga el id #{expediente.Id}");
         }
     }
