@@ -196,18 +196,42 @@ for (int i = 0; i < 6; i++)
     darAltaTramite.Ejecutar(tramites[i],IdUsuario);
 }
 
-// Imprimir todos los expedientes con sus tramites
-for (int i = 1; i <= 3; i++)
-{
-    Expediente e = consultarExpedientePorId.Ejecutar(i);
-    Console.WriteLine(e);
-    for (int j = 0; j < e.Tramites.Count; j++)
-    {
-        Console.WriteLine(e.Tramites[j]);
-    }
-}
+// Probar imprimir todos los expedientes con sus tramites
+// for (int i = 1; i <= 3; i++)
+// {
+//     Expediente e = consultarExpedientePorId.Ejecutar(i);
+//     Console.WriteLine(e);
+//     for (int j = 0; j < e.Tramites.Count; j++)
+//     {
+//         Console.WriteLine(e.Tramites[j]);
+//     }
+// }
 
+// Probar borrado
 // Borrar expedientes con id = 2
-darBajaExpediente.Ejecutar(2, IdUsuario);
+// for (int i = 1; i <= 3; i++)
+// {
+//     Expediente e = consultarExpedientePorId.Ejecutar(i);
+//     Console.WriteLine(e);
+//     for (int j = 0; j < e.Tramites.Count; j++)
+//     {
+//         Console.WriteLine(e.Tramites[j]);
+//     }
+// }
+// darBajaExpediente.Ejecutar(2, IdUsuario);
+
+/* Probar modificado */
+// Modificar expediente
+Console.WriteLine("Expediente Viejo: ");
+Console.WriteLine(expedientes[0]);
+
+expedientes[0].Caratula = "Caratula Modificada";
+expedientes[0].Estado = EstadoExpediente.EnNotificacion;
+modificarExpediente.Ejecutar(expedientes[0], IdUsuario);
+
+// Verificar modificacion
+Console.WriteLine("Expediente Nuevo: ");
+Console.WriteLine(consultarExpedientePorId.Ejecutar(expedientes[0].Id));
+/* --------------------------------------------- */
 
 Console.ReadKey();
