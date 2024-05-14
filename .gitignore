@@ -16,6 +16,8 @@
 *.user
 *.suo
 *.userprefs
+SGE.Consola/DireccionExpedientesTXT
+SGE.Consola/DireccionTramitesTXT
 
 # Ignore NuGet package directory
 packages/

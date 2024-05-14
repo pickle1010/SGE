@@ -2,7 +2,7 @@
 
 public class CasoDeUsoExpedienteConsultaTodos(IExpendienteRepositorio repo)
 {
-    public List<Expediente> Ejecutar(Expediente expediente)
+    public List<Expediente> Ejecutar()
     {   
         return repo.ConsultarTodos();
     }
