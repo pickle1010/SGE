@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGE.Aplicacion", "SGE.Aplic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGE.Repositorios", "SGE.Repositorios\SGE.Repositorios.csproj", "{D550FCFA-F06E-45CB-9599-7CFB72118D42}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SGE.UI", "SGE.UI\SGE.UI.csproj", "{2DE53C59-0A9F-464A-B924-F86258D86F10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D550FCFA-F06E-45CB-9599-7CFB72118D42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D550FCFA-F06E-45CB-9599-7CFB72118D42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D550FCFA-F06E-45CB-9599-7CFB72118D42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DE53C59-0A9F-464A-B924-F86258D86F10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DE53C59-0A9F-464A-B924-F86258D86F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DE53C59-0A9F-464A-B924-F86258D86F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DE53C59-0A9F-464A-B924-F86258D86F10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
