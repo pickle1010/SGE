@@ -6,21 +6,12 @@ using SGE.Aplicacion;
 
 public class RepositorioExpediente : IExpendienteRepositorio
 {
-    private int ProximoId { get; set; } = 1;
     private SGEContext context;
 
     public RepositorioExpediente(SGEContext context)
     {
          this.context = context;
     }
-
-
-    // El método FormatExpediente nos seguiría sirviendo para algo? 
-
-    // private string FormatExpediente(Expediente expediente)
-    // {
-    //     return $"{expediente.Id},{expediente.Caratula},{expediente.Estado},{expediente.FechaHoraCreacion},{expediente.FechaHoraUltimaModificacion},{expediente.IdUsuarioUltimaModificacion}";
-    // }
 
     public void Agregar(Expediente expediente)
     {
@@ -59,6 +50,8 @@ public class RepositorioExpediente : IExpendienteRepositorio
         }
         expedienteExistente.Caratula = expediente.Caratula;
         expedienteExistente.Estado = expediente.Estado;
+        expedienteExistente.FechaHoraUltimaModificacion = expediente.FechaHoraUltimaModificacion;
+        expedienteExistente.IdUsuarioUltimaModificacion = expediente.IdUsuarioUltimaModificacion;
         context.SaveChanges();
     }
 }
