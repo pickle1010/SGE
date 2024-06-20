@@ -12,7 +12,7 @@ public class ServicioHashing : IServicioHashing
         return Convert.ToBase64String(bytes);
     }
 
-    public bool VerificarHash(string hash, string data)
+    public bool Verificar(string hash, string data)
     {
         string dataHash = CalcularHash(data);
         return hash == dataHash;

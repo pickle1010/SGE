@@ -3,5 +3,5 @@
 public interface IServicioHashing
 {
     string CalcularHash(string data);
-    bool VerificarHash(string hash, string data);
+    bool Verificar(string hash, string data);
 }
