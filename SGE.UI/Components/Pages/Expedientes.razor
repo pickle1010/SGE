@@ -26,6 +26,9 @@
                 <td>@e.FechaHoraCreacion</td>
                 <td>@e.FechaHoraUltimaModificacion</td>
                 <td>@e.IdUsuarioUltimaModificacion</td>
+                <td>
+                    <button class="btn btn-secondary" @onclick="() => ModificarExpediente(e.Id)">Editar</button>
+                </td>
             </tr>
         }
     </tbody>
@@ -38,8 +41,15 @@
     private void AgregarExpediente(){
         Navegador.NavigateTo("agregar-expediente");
     }
+
+    private void ModificarExpediente(int Id){
+        Navegador.NavigateTo($"/modificar-expediente/{Id}");
+    }
+
     protected override void OnInitialized()
     {
         _expedientes = CasoDeUsoExpedienteConsultarTodos.Ejecutar();
     }
+
+
 }

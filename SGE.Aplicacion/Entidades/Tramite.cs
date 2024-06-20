@@ -10,6 +10,10 @@ public class Tramite
     public DateTime FechaHoraUltimaModificacion { get; set; }
     public int IdUsuarioUltimaModificacion { get; set; }
 
+    public Tramite (){
+
+    }
+    
     public Tramite(string contenido, int expedienteId) {
         Contenido = contenido;
         ExpedienteId = expedienteId;
