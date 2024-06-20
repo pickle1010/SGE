@@ -18,6 +18,7 @@
 *.userprefs
 SGE.Consola/DireccionExpedientesTXT
 SGE.Consola/DireccionTramitesTXT
+*.sqlite
 
 # Ignore NuGet package directory
 packages/
