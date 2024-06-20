@@ -1,9 +1,15 @@
 ﻿namespace SGE.Aplicacion;
 
-public class ServicioAutorizacion: IServicioAutorizacion
+public class ServicioAutorizacion(IUsuarioRepositorio repoUsuario): IServicioAutorizacion
 {
     public bool PoseeElPermiso(int IdUsuario, Permiso permiso)
     {
-        return IdUsuario == 1;
+        var usuario = repoUsuario.ConsultarPorID(IdUsuario);
+        if(usuario == null)
+        {
+            return false;
+        }
+        
+        return usuario.Permisos.Contains(permiso); //REVISAR POSIBLE NULL
     }
 }
