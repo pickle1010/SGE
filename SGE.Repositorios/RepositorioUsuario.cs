@@ -19,11 +19,6 @@ public class RepositorioUsuario
         context.Add(usuario);
         context.SaveChanges();
     }
-    public void Agregar(Usuario usuario)
-    {
-        context.Add(usuario);
-        context.SaveChanges();
-    }
 
     public Usuario ConsultarPorID(int id){
         var usuario = context.Usuarios.Where(u => u.Id == id).SingleOrDefault();
