@@ -1,6 +1,6 @@
 ﻿namespace SGE.Aplicacion;
 
-public class CasoDeUsoExpedienteConsultaTodos(IExpendienteRepositorio repo)
+public class CasoDeUsoExpedienteConsultarTodos(IExpendienteRepositorio repo)
 {
     public List<Expediente> Ejecutar()
     {   
