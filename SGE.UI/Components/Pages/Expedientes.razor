@@ -1,8 +1,10 @@
 @page "/expedientes"
 @rendermode InteractiveServer
 @inject CasoDeUsoExpedienteConsultarTodos CasoDeUsoExpedienteConsultarTodos
+@inject NavigationManager Navegador
 
 <PageTitle>SGE - Expedientes</PageTitle>
+<button class="btn btn-primary" @onclick="AgregarExpediente">Agregar Expediente</button>
 <table class="table">
     <thead>
         <tr>
@@ -32,6 +34,10 @@
 @code
 {
     List<Expediente> _expedientes;
+    
+    private void AgregarExpediente(){
+        Navegador.NavigateTo("agregar-expediente");
+    }
     protected override void OnInitialized()
     {
         _expedientes = CasoDeUsoExpedienteConsultarTodos.Ejecutar();
