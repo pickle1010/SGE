@@ -10,7 +10,7 @@ public class UsuarioValidador
         {
             mensajeError += "Nombre del usuario no puede estar vacío.\n";
         }
-        else if (Regex.IsMatch(usuario.Nombre, @"^[a-zA-Z]+$"))
+        else if (!Regex.IsMatch(usuario.Nombre, @"^[a-zA-Z]+$"))
         {
             mensajeError += "Nombre del usuario debe tener solo letras.\n";
         }
@@ -18,7 +18,7 @@ public class UsuarioValidador
         {
             mensajeError += "Apellido del usuario no puede estar vacío.\n";
         }
-        else if (Regex.IsMatch(usuario.Nombre, @"^[a-zA-Z]+$"))
+        else if (!Regex.IsMatch(usuario.Nombre, @"^[a-zA-Z]+$"))
         {
             mensajeError += "Apellido del usuario debe tener solo letras.\n";
         }
@@ -30,7 +30,7 @@ public class UsuarioValidador
         {
             try
             {
-                if (Regex.IsMatch(usuario.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase))
+                if (!Regex.IsMatch(usuario.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase))
                 {
                     mensajeError += "Email del usuario no tiene el formato correcto.\n";
                 }

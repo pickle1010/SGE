@@ -1,0 +1,44 @@
+@page "/agregar-usuario"
+@rendermode InteractiveServer
+@inject CasoDeUsoUsuarioAlta CasoDeUsoUsuarioAlta
+@inject NavigationManager Navegador
+
+<PageTitle>SGE - Agregar Usuario</PageTitle>
+<h3>Agregar Usuario</h3>
+
+<EditForm Model="@usuario" OnValidSubmit="AgregarUsuarioValido">
+    <div>
+        <label for="nombre">Nombre:</label>
+        <InputText id="nombre" @bind-Value="usuario.Nombre" />
+    </div>
+    <div>
+        <label for="apellido">Apellido:</label>
+        <InputText id="apellido" @bind-Value="usuario.Apellido" />
+    </div>
+    <div>
+        <label for="email">Correo Electrónico:</label>
+        <InputText id="email" @bind-Value="usuario.Email" />
+    </div>
+    <div>
+        <label for="contraseña">Contraseña:</label>
+        <InputText id="contraseña" type="password" @bind-Value="usuario.Contraseña" />
+    </div>
+    <button type="submit">Agregar</button>
+</EditForm>
+
+@code {
+    private Usuario usuario = new Usuario();
+
+    private void AgregarUsuarioValido()
+    {
+        try
+        {
+            CasoDeUsoUsuarioAlta.Ejecutar(usuario, 1);
+            Navegador.NavigateTo("usuarios");
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine("Usuario Invalido: " + e.Message);
+        }
+    }
+}

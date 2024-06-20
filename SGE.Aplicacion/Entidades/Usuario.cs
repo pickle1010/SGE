@@ -9,4 +9,9 @@ public class Usuario
     public string? Contraseña { get; set; }
     public List<Permiso>? Permisos { get; set; }
     public bool EsAdmin { get; set; } = false;
+
+    public override string ToString()
+    {
+        return $"(Id:{Id}) {Nombre}, {Apellido}, {Email}, {Contraseña}, {EsAdmin}";
+    }
 }

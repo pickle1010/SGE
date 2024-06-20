@@ -1,10 +1,10 @@
 @page "/usuarios"
 @rendermode InteractiveServer
 @inject CasoDeUsoUsuarioConsultarTodos CasoDeUsoUsuarioConsultarTodos
-
-@using SGE.Aplicacion
+@inject NavigationManager Navegador
 
 <PageTitle>SGE - Usuarios</PageTitle>
+<button class="btn btn-primary" @onclick="AgregarUsuario">Agregar usuario</button>
 <table class="table">
     <thead>
         <tr>
@@ -13,6 +13,7 @@
             <th>Apellido</th>
             <th>Email</th>
             <th>Contraseña</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -24,13 +25,24 @@
                 <td>@u.Apellido</td>
                 <td>@u.Email</td>
                 <td>@u.Contraseña</td>
+                <td>
+                    <button class="btn btn-primary">
+                        Editar
+                    </button>
+                    <button class="btn btn-danger">
+                        Eliminar
+                    </button>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
 @code {
-    List<Usuario> _usuarios;
+    private List<Usuario> _usuarios;
+    private void AgregarUsuario(){
+        Navegador.NavigateTo("agregar-usuario");
+    }
     protected override void OnInitialized()
     {
         _usuarios = CasoDeUsoUsuarioConsultarTodos.Ejecutar();
