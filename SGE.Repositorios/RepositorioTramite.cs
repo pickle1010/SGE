@@ -4,20 +4,17 @@ namespace SGE.Repositorios;
 
 public class RepositorioTramite : ITramiteRepositorio
 {
-    private SGEContext context; 
-    public RepositorioTramite(SGEContext context)
-    {
-        this.context = context;
-    } 
 
     public void Agregar(Tramite tramite)
     {
+        using var context = new SGEContext();
         context.Add(tramite);
         context.SaveChanges();
     }
 
     public Tramite Eliminar(int id)
     {
+        using var context = new SGEContext();
         var tramite = context.Tramites.Where(t => t.Id == id).SingleOrDefault();
         if (tramite == null){
             throw new RepositorioException($"No existe trámite que tenga el id #{id}");
@@ -29,6 +26,7 @@ public class RepositorioTramite : ITramiteRepositorio
 
     public void Modificar(Tramite tramite)
     {
+        using var context = new SGEContext();
         var tramiteExistente = context.Tramites.Where(t => t.Id == tramite.Id).SingleOrDefault();
         if(tramiteExistente == null){
             throw new RepositorioException($"No existe trámite que tenga el id #{tramite.Id}");
@@ -42,10 +40,12 @@ public class RepositorioTramite : ITramiteRepositorio
 
     public List<Tramite> ConsultarPorEtiqueta(EtiquetaTramite etiqueta)
     {
+        using var context = new SGEContext();
         return context.Tramites.Where(t => t.Etiqueta == etiqueta).ToList();
     }
 
     public Tramite ConsultarPorId(int id){
+        using var context = new SGEContext();
         var tramite = context.Tramites.Where(t => t.Id == id).SingleOrDefault();
         if(tramite == null){
             throw new RepositorioException($"No existe trámite que tenga el id #{id}");
@@ -54,6 +54,7 @@ public class RepositorioTramite : ITramiteRepositorio
     }
 
     public List<Tramite> ConsultarPorExpediente(int expedienteID){
+        using var context = new SGEContext();
         var tramites = context.Tramites.Where(t => t.ExpedienteId == expedienteID).ToList();
         if(tramites == null){
             throw new RepositorioException($"No existen trámites asociados al expediente con id #{expedienteID}");
@@ -62,6 +63,7 @@ public class RepositorioTramite : ITramiteRepositorio
     }
 
     public void EliminarPorExpediente(int expedienteID){
+        using var context = new SGEContext();
         var expediente = context.Expedientes.Where(e => e.Id == expedienteID).SingleOrDefault();
         if(expediente == null){
             throw new RepositorioException($"No existe expediente que tenga el id #{expedienteID}");

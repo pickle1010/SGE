@@ -2,7 +2,7 @@
 
 namespace SGE.Aplicacion;
 
-public class CasoDeUsoExpedienteAlta(IExpendienteRepositorio repo, ExpedienteValidador validador, IServicioAutorizacion servicioAutorizacion)
+public class CasoDeUsoExpedienteAlta(IExpedienteRepositorio repo, ExpedienteValidador validador, IServicioAutorizacion servicioAutorizacion)
 {
     public void Ejecutar(Expediente expediente, int idUsuario)
     {

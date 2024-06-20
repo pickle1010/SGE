@@ -1,6 +1,6 @@
 ﻿namespace SGE.Aplicacion;
 
-public interface IExpendienteRepositorio
+public interface IExpedienteRepositorio
 {
     void Agregar(Expediente expediente);
     Expediente Eliminar(int id);

@@ -1,6 +1,6 @@
 ﻿namespace SGE.Aplicacion;
 
-public class CasoDeUsoExpedienteConsultaPorID(IExpendienteRepositorio repoExpediente, ITramiteRepositorio repoTramite)
+public class CasoDeUsoExpedienteConsultarPorID(IExpedienteRepositorio repoExpediente, ITramiteRepositorio repoTramite)
 {
     public Expediente Ejecutar(int expedienteId)
     {
