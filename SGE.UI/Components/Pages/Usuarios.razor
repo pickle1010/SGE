@@ -1,0 +1,38 @@
+@page "/usuarios"
+@rendermode InteractiveServer
+@inject CasoDeUsoUsuarioConsultarTodos CasoDeUsoUsuarioConsultarTodos
+
+@using SGE.Aplicacion
+
+<PageTitle>SGE - Usuarios</PageTitle>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Email</th>
+            <th>Contraseña</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in _usuarios)
+        {
+            <tr>
+                <td>@u.Id</td>
+                <td>@u.Nombre</td>
+                <td>@u.Apellido</td>
+                <td>@u.Email</td>
+                <td>@u.Contraseña</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<Usuario> _usuarios;
+    protected override void OnInitialized()
+    {
+        _usuarios = CasoDeUsoUsuarioConsultarTodos.Ejecutar();
+    }
+}

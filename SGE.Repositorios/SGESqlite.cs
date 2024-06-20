@@ -15,8 +15,16 @@ public class SGESqlite
             }
             Console.WriteLine("La base de datos ha sido creada exitosamente");
         }
-        else{
-            Console.WriteLine("Error al crear la base de datos");
+        else
+        {
+            Console.WriteLine("La base de datos ya fue creada previamente");
+            IUsuarioRepositorio repo = new RepositorioUsuario();
+            Usuario u = new Usuario();
+            u.Nombre = "Lisandro";
+            u.Apellido = "Martinez";
+            u.Email = "email@ejemplo.com";
+            u.Contraseña = "contraseña";
+            repo.Agregar(u);
         }
     }
 }

@@ -1,0 +1,41 @@
+@page "/expedientes"
+@rendermode InteractiveServer
+@inject CasoDeUsoExpedienteConsultarTodos CasoDeUsoExpedienteConsultarTodos
+
+@using SGE.Aplicacion
+
+<PageTitle>SGE - Expedientes</PageTitle>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Caratula</th>
+            <th>Estado</th>
+            <th>Fecha y Hora de Creacion</th>
+            <th>Fecha y Hora de Modificación</th>
+            <th>Modificado por</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in _expedientes)
+        {
+            <tr>
+                <td>@e.Id</td>
+                <td>@e.Caratula</td>
+                <td>@e.Estado</td>
+                <td>@e.FechaHoraCreacion</td>
+                <td>@e.FechaHoraUltimaModificacion</td>
+                <td>@e.IdUsuarioUltimaModificacion</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code
+{
+    List<Expediente> _expedientes;
+    protected override void OnInitialized()
+    {
+        _expedientes = CasoDeUsoExpedienteConsultarTodos.Ejecutar();
+    }
+}
