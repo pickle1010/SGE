@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 public class UsuarioValidador
 {
-    public bool Validar(Usuario usuario, out string mensajeError)
+    public bool Validar(Usuario usuario, out string mensajeError, bool validarFormatoContraseña)
     {
         mensajeError = "";
         if (string.IsNullOrWhiteSpace(usuario.Nombre))
@@ -44,7 +44,7 @@ public class UsuarioValidador
         {
             mensajeError += "Contraseña del usuario no puede estar vacía.\n";
         }
-        else if (usuario.Contraseña.Length < 6)
+        else if(validarFormatoContraseña && usuario.Contraseña.Length < 6)
         {
             mensajeError += "Contraseña del usuario debe tener 6 caracteres como mínimo.\n";
         }
