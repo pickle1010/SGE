@@ -6,4 +6,5 @@ public interface IUsuarioRepositorio
     Usuario Eliminar(int id);
     void Modificar(Usuario usuario);
     List<Usuario> ConsultarTodos();
+    Usuario ConsultarPorEmail(string email);
 }
