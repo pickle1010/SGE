@@ -1,6 +1,9 @@
 ﻿namespace SGE.Aplicacion;
 
-public class CasoDeUsoUsuarioConsultaTodos(IUsuarioRepositorio repo, UsuarioValidador validador, IServicioAutorizacion servicioAutorizacion)
+public class CasoDeUsoUsuarioConsultarTodos(IUsuarioRepositorio repo, IServicioAutorizacion servicioAutorizacion)
 {
-
+    public List<Usuario> Ejecutar()
+    {   
+        return repo.ConsultarTodos();
+    }
 }
