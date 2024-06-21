@@ -1,0 +1,77 @@
+﻿@page "/editar-usuario/{Id:int?}"
+@rendermode InteractiveServer
+@inject CasoDeUsoUsuarioConsultarPorId CasoDeUsoUsuarioConsultarPorId
+@inject CasoDeUsoUsuarioModificacion CasoDeUsoUsuarioModificacion
+@inject CasoDeUsoUsuarioEditarPerfil CasoDeUsoUsuarioEditarPerfil
+@inject NavigationManager Navegador
+
+
+<PageTitle>SGE - Editar Usuario</PageTitle>
+<h3>Editar Usuario</h3>
+<h4>Modificando al Usuario "@_usuario.Nombre"</h4>
+
+
+<EditForm Model="@_usuario" OnValidSubmit="ModificarUsuarioValido">
+    <div>
+        <label for="nombre">Nombre:</label>
+        <InputText id="nombre" @bind-Value="_usuario.Nombre" />
+    </div>
+    <div>
+        <label for="apellido">Apellido:</label>
+        <InputText id="apellido" @bind-Value="_usuario.Apellido" />
+    </div>
+    <div>
+        <label for="email">Correo Electrónico:</label>
+        <InputText id="email" @bind-Value="_usuario.Email" />
+    </div>
+    <div>
+        <label for="contraseña">Contraseña:</label>
+        <InputText id="contraseña" type="password" @bind-Value="_usuario.Contraseña" />
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+</EditForm>
+
+
+
+
+@code {
+    Usuario _usuario = new Usuario();
+    bool passwordCambiada = false;
+    int idUsuarioTemporal = 1; //Variable temporal ya que no tengo sesion iniciada
+    [Parameter] public int id { get; set; }
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            _usuario = CasoDeUsoUsuarioConsultarPorId.Ejecutar(id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error al cargar el usuario: " + e.Message);
+            // Manejo de errores adicional si es necesario
+        }
+    }
+
+
+    private void ModificarUsuarioValido()
+    {
+        try
+        {
+            if (idUsuarioTemporal == 1)
+            {
+                CasoDeUsoUsuarioModificacion.Ejecutar(_usuario, idUsuarioTemporal, passwordCambiada);
+            }
+            else
+            {
+                CasoDeUsoUsuarioEditarPerfil.Ejecutar(_usuario, idUsuarioTemporal, passwordCambiada);
+            }
+
+            Navegador.NavigateTo("/usuarios");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Usuario Invalido: " + e.Message);
+        }
+    }
+}

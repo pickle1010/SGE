@@ -49,7 +49,10 @@ public class RepositorioUsuario : IUsuarioRepositorio
             throw new RepositorioException($"No existe usuario que tenga el id #{usuario.Id}");
         }
         usuario.Id = usuarioExistente.Id;
-        usuarioExistente = usuario;
+        usuarioExistente.Nombre = usuario.Nombre;
+        usuarioExistente.Apellido = usuario.Apellido;
+        usuarioExistente.Email = usuario.Email;
+        usuarioExistente.Contraseña = usuario.Contraseña;
         context.SaveChanges();
     }
 
