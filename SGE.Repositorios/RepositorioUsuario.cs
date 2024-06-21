@@ -74,6 +74,7 @@ public class RepositorioUsuario : IUsuarioRepositorio
         usuarioExistente.Apellido = usuario.Apellido;
         usuarioExistente.Email = usuario.Email;
         usuarioExistente.Contraseña = usuario.Contraseña;
+        usuarioExistente.Permisos = usuario.Permisos;
         context.SaveChanges();
     }
     

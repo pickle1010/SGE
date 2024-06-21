@@ -1,4 +1,4 @@
-﻿@page "/editar-usuario/{Id:int?}"
+﻿@page "/editar-usuario/{id:int}"
 @rendermode InteractiveServer
 @inject IServicioGestionDeSesion ServicioGestionDeSesion
 @inject CasoDeUsoUsuarioConsultarPorId CasoDeUsoUsuarioConsultarPorId
@@ -6,14 +6,14 @@
 @inject CasoDeUsoUsuarioEditarPerfil CasoDeUsoUsuarioEditarPerfil
 @inject NavigationManager Navegador
 
-@if(!usuarioAutorizado)
+@if (!usuarioAutorizado)
 {
     <h3>Acceso denegado</h3>
     <p>No tienes permiso para ver este contenido.</p>
 }
 else
 {
-    @if(editandoPerfil)
+    @if (editandoPerfil)
     {
         <PageTitle>SGE - Editar Mi Perfil</PageTitle>
         <h3>Editar Mi Perfil</h3>
@@ -26,29 +26,41 @@ else
     }
 
     <EditForm Model="@_edited_user" OnValidSubmit="ModificarUsuarioValido">
-        <div>
-            <label for="nombre">Nombre:</label>
-            <InputText id="nombre" @bind-Value="_edited_user.Nombre" />
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre:</label>
+            <InputText id="nombre" class="form-control" @bind-Value="_edited_user.Nombre" />
         </div>
-        <div>
-            <label for="apellido">Apellido:</label>
-            <InputText id="apellido" @bind-Value="_edited_user.Apellido" />
+        <div class="mb-3">
+            <label for="apellido" class="form-label">Apellido:</label>
+            <InputText id="apellido" class="form-control" @bind-Value="_edited_user.Apellido" />
         </div>
-        <div>
-            <label for="email">Correo Electrónico:</label>
-            <InputText id="email" @bind-Value="_edited_user.Email" />
+        <div class="mb-3">
+            <label for="email" class="form-label">Correo Electrónico:</label>
+            <InputText id="email" class="form-control" @bind-Value="_edited_user.Email" />
         </div>
-        <div>
-            <label for="contraseña">Contraseña:</label>
-            <InputText id="contraseña" type="password" @bind-Value="_edited_user.Contraseña" />
+        <div class="mb-3">
+            <label for="contraseña" class="form-label">Contraseña:</label>
+            <InputText id="contraseña" type="password" class="form-control" @bind-Value="_edited_user.Contraseña" />
         </div>
+        @if (!editandoPerfil)
+        {
+            <div class="form-group">
+                <label>Permisos:</label>
+                @foreach (var permiso in permisosDisponibles)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="@permiso" checked="@isChecked[(int)permiso]" @onchange="(e) => ActualizarPermiso(permiso, e)">
+                        @permiso.ToString()
+                    </div>
+                }
+            </div>
+        }
         <button type="submit" class="btn btn-primary">Guardar cambios</button>
     </EditForm>
 }
 
 @code {
     private bool usuarioAutorizado = false;
-
     private Usuario _usuario = new Usuario();
     private EditUserModel _edited_user = new EditUserModel();
     private Usuario? _session_user;
@@ -56,31 +68,50 @@ else
     private bool editandoPerfil = false;
     [Parameter] public int id { get; set; }
 
+    private Permiso[] permisosDisponibles;
+    private bool[] isChecked;
+
     protected override void OnInitialized()
     {
         _session_user = ServicioGestionDeSesion.ObtenerUsuario();
         usuarioAutorizado = _session_user != null;
-        if(usuarioAutorizado)
+
+        if (usuarioAutorizado)
         {
             try
             {
                 _usuario = CasoDeUsoUsuarioConsultarPorId.Ejecutar(id);
                 usuarioAutorizado = usuarioAutorizado && (_session_user.EsAdmin || _session_user.Id == _usuario.Id);
-                if(usuarioAutorizado)
+
+                if (usuarioAutorizado)
                 {
                     _edited_user.Nombre = _usuario.Nombre;
                     _edited_user.Apellido = _usuario.Apellido;
                     _edited_user.Email = _usuario.Email;
                     editandoPerfil = (_session_user.Id == _usuario.Id);
+
+                    if(!editandoPerfil)
+                    {
+                        permisosDisponibles = Enum.GetValues(typeof(Permiso)).Cast<Permiso>().ToArray();
+                        isChecked = new bool[permisosDisponibles.Length];
+                        for (int i = 0; i < permisosDisponibles.Length; i++)
+                        {
+                            isChecked[i] = _usuario.Permisos.Contains(permisosDisponibles[i]);
+                        }
+                    }
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error al cargar el usuario: " + e.Message);
                 usuarioAutorizado = false;
-                // Manejo de errores adicional si es necesario
             }
         }
+    }
+
+    private void ActualizarPermiso(Permiso permiso, ChangeEventArgs e)
+    {
+        isChecked[(int)permiso] = (bool)e.Value;
     }
 
     private void ModificarUsuarioValido()
@@ -89,10 +120,24 @@ else
         _usuario.Nombre = _edited_user.Nombre;
         _usuario.Apellido = _edited_user.Apellido;
         _usuario.Email = _edited_user.Email;
-        if(passwordCambiada)
+
+        if (passwordCambiada)
         {
             _usuario.Contraseña = _edited_user.Contraseña;
         }
+
+        if(!editandoPerfil)
+        {
+            _usuario.Permisos = new List<Permiso>();
+            for (int i = 0; i < isChecked.Length; i++)
+            {
+                if (isChecked[i])
+                {
+                    _usuario.Permisos.Add(permisosDisponibles[i]);
+                }
+            }
+        }
+
         try
         {
             if (editandoPerfil)
@@ -104,7 +149,13 @@ else
                 CasoDeUsoUsuarioModificacion.Ejecutar(_usuario, _session_user.Id, passwordCambiada);
             }
 
-            Navegador.NavigateTo("/usuarios");
+            if(editandoPerfil)
+            {
+                Navegador.NavigateTo("/miperfil");
+            }
+            else{
+                Navegador.NavigateTo("/usuarios");
+            }
         }
         catch (Exception e)
         {
@@ -114,9 +165,9 @@ else
 
     private class EditUserModel
     {
-        public string? Nombre;
-        public string? Apellido;
-        public string? Email;
-        public string? Contraseña;
+        public string? Nombre { get; set; }
+        public string? Apellido { get; set; }
+        public string? Email { get; set; }
+        public string? Contraseña { get; set; }
     }
 }

@@ -3,45 +3,54 @@
 @inject IServicioGestionDeSesion ServicioGestionDeSesion
 @inject NavigationManager Navigation
 
-<div class="d-flex align-items-center">
-    <div class="me-auto">
-        <h3>Perfil del Usuario</h3>
-    </div>
-    <button class="btn btn-danger" @onclick="CerrarSesion">Cerrar Sesión</button>
-</div>
-
-@if (usuario != null)
+<PageTitle>SGE - Mi Perfil</PageTitle>
+@if (_session_user == null)
+{
+    <p>Para ver este contenido debes iniciar sesion o registrarte.</p>
+}
+else 
 {
     <div class="card">
         <div class="card-header">
-            Mi Perfil
+            <div class="d-flex align-items-center">
+                <div class="me-auto">
+                    <h3>Mi Perfil</h3>
+                </div>
+                <button class="btn btn-info me-1" @onclick="EditarPerfil">Editar Perfil</button>
+                <button class="btn btn-danger" @onclick="CerrarSesion">Cerrar Sesión</button>
+            </div>
         </div>
         <div class="card-body">
-            <p><strong>Nombre:</strong> @usuario.Nombre</p>
-            <p><strong>Apellido:</strong> @usuario.Apellido</p>
-            <p><strong>Email:</strong> @usuario.Email</p>
-            <ul>
-                @foreach (var p in @usuario.Permisos)
+            <p><strong>Nombre:</strong> @_session_user.Nombre</p>
+            <p><strong>Apellido:</strong> @_session_user.Apellido</p>
+            <p><strong>Email:</strong> @_session_user.Email</p>
+            <p>
+                <strong>Permisos:</strong>
+                @if(@_session_user.Permisos.Count > 0)
                 {
-                    <li>@p</li>
+                    <ul>
+                        @foreach (var p in @_session_user.Permisos)
+                        {
+                            <li>@p</li>
+                        }
+                    </ul>
                 }
-            </ul>
+                else
+                {
+                    @:Solo tienes permiso de lectura
+                }
+            </p>
             <!-- Add other properties here -->
         </div>
     </div>
 }
-else
-{
-    <p>No hay información del usuario disponible.</p>
-    <button class="btn btn-primary" @onclick="IniciarSesion">Iniciar Sesión</button>
-}
 
 @code {
-    private Usuario? usuario;
+    private Usuario? _session_user;
 
     protected override void OnInitialized()
     {
-        usuario = ServicioGestionDeSesion.ObtenerUsuario();
+        _session_user = ServicioGestionDeSesion.ObtenerUsuario();
     }
 
     private void IniciarSesion()
@@ -53,5 +62,10 @@ else
     {
         ServicioGestionDeSesion.CerrarSesion();
         Navigation.NavigateTo("login");
+    }
+
+    private void EditarPerfil()
+    {
+        Navigation.NavigateTo($"editar-usuario/{_session_user.Id}");
     }
 }
