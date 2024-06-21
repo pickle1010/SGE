@@ -18,6 +18,9 @@ else
     <PageTitle>SGE - Tramites</PageTitle>
 
     <h3>Buscar Tramite</h3>
+
+    <DialogoConfirmacion @ref="dialogo"/>
+
     <InputSelect @bind-Value="busquedaEtiqueta">
         <option value="">Seleccione una etiqueta</option>
         @foreach (var etiqueta in Enum.GetValues(typeof(EtiquetaTramite)))
@@ -71,7 +74,7 @@ else
                             }
                             @if(ServicioAutorizacion.PoseeElPermiso(_session_user.Id, Permiso.TramiteBaja))
                             {
-                                <button class="btn btn-danger" @onclick="() => EliminarTramite(t.Id)">Eliminar</button>
+                                <button class="btn btn-danger" @onclick="() => ConfirmarEliminacion(t)">Eliminar</button>
                             }
                         </td>
                     </tr>
@@ -117,7 +120,7 @@ else
                             }
                             @if(ServicioAutorizacion.PoseeElPermiso(_session_user.Id, Permiso.TramiteBaja))
                             {
-                                <button class="btn btn-danger" @onclick="() => EliminarTramite(t.Id)">Eliminar</button>
+                                <button class="btn btn-danger" @onclick="() => ConfirmarEliminacion(t)">Eliminar</button>
                             }
                         </td>
                     </tr>
@@ -133,6 +136,7 @@ else
     private EtiquetaTramite? busquedaEtiqueta;
     private string errorMensaje;
     private Usuario? _session_user;
+    DialogoConfirmacion dialogo = null!;
     
     private void AgregarTramite(){
         Navegador.NavigateTo("agregar-tramite");
@@ -142,11 +146,22 @@ else
         Navegador.NavigateTo($"/modificar-tramite/{Id}");
     }
 
-    private void EliminarTramite(int Id)
+    private void ConfirmarEliminacion(Tramite tramite)
+    {
+        if (dialogo != null)
+        {
+            dialogo.Mostrar(
+                $"¿Desea eliminar el trámite con ID #{tramite.Id}?",
+                EventCallback.Factory.Create(this, () => EliminarTramite(tramite))
+            );
+        }
+    }
+
+    private void EliminarTramite(Tramite tramite)
     {
         try
         {
-            CasoDeUsoTramiteBaja.Ejecutar(Id, 1);
+            CasoDeUsoTramiteBaja.Ejecutar(tramite.Id, 1);
             _tramites = CasoDeUsoTramiteConsultarTodos.Ejecutar();
             _tramitesFiltrados = null;
         }
