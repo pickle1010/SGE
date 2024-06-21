@@ -2,43 +2,94 @@
 @rendermode InteractiveServer
 @inject CasoDeUsoExpedienteConsultarTodos CasoDeUsoExpedienteConsultarTodos
 @inject CasoDeUsoExpedienteBaja CasoDeUsoExpedienteBaja
+@inject CasoDeUsoExpedienteConsultarPorID CasoDeUsoExpedienteConsultarPorID
 @inject NavigationManager Navegador
 
 <PageTitle>SGE - Expedientes</PageTitle>
+
+<h3>Buscar Expediente</h3>
+<input @bind="busquedaId" placeholder="Ingrese ID del expediente" />
+<button class="btn btn-primary" @onclick="BuscarExpediente">Buscar</button>
 <button class="btn btn-primary" @onclick="AgregarExpediente">Agregar Expediente</button>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Caratula</th>
-            <th>Estado</th>
-            <th>Fecha y Hora de Creacion</th>
-            <th>Fecha y Hora de Modificación</th>
-            <th>Modificado por</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var e in _expedientes)
-        {
+<button class="btn btn-secondary" @onclick="MostrarTodos">Mostrar Todos</button>
+
+
+@if (!string.IsNullOrEmpty(errorMensaje))
+{
+    <div class="alert alert-danger">@errorMensaje</div>
+}
+
+@if (_expedienteFiltrado != null)
+{
+    <h3>Resultado de la Búsqueda</h3>
+    <table class="table">
+        <thead>
             <tr>
-                <td>@e.Id</td>
-                <td>@e.Caratula</td>
-                <td>@e.Estado</td>
-                <td>@e.FechaHoraCreacion</td>
-                <td>@e.FechaHoraUltimaModificacion</td>
-                <td>@e.IdUsuarioUltimaModificacion</td>
+                <th>Id</th>
+                <th>Caratula</th>
+                <th>Estado</th>
+                <th>Fecha y Hora de Creacion</th>
+                <th>Fecha y Hora de Modificación</th>
+                <th>Modificado por</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@_expedienteFiltrado.Id</td>
+                <td>@_expedienteFiltrado.Caratula</td>
+                <td>@_expedienteFiltrado.Estado</td>
+                <td>@_expedienteFiltrado.FechaHoraCreacion</td>
+                <td>@_expedienteFiltrado.FechaHoraUltimaModificacion</td>
+                <td>@_expedienteFiltrado.IdUsuarioUltimaModificacion</td>
                 <td>
-                    <button class="btn btn-secondary" @onclick="() => ModificarExpediente(e.Id)">Editar</button>
-                    <button class="btn btn-danger" @onclick="() => EliminarExpediente(e.Id)">Eliminar</button>
+                    <button class="btn btn-secondary" @onclick="() => ModificarExpediente(_expedienteFiltrado.Id)">Editar</button>
+                    <button class="btn btn-danger" @onclick="() => EliminarExpediente(_expedienteFiltrado.Id)">Eliminar</button>
                 </td>
             </tr>
-        }
-    </tbody>
-</table>
-
+        </tbody>
+    </table>
+}
+else if (string.IsNullOrEmpty(errorMensaje))
+{
+    <h3>Todos los Expedientes</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Caratula</th>
+                <th>Estado</th>
+                <th>Fecha y Hora de Creacion</th>
+                <th>Fecha y Hora de Modificación</th>
+                <th>Modificado por</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in _expedientes)
+            {
+                <tr>
+                    <td>@e.Id</td>
+                    <td>@e.Caratula</td>
+                    <td>@e.Estado</td>
+                    <td>@e.FechaHoraCreacion</td>
+                    <td>@e.FechaHoraUltimaModificacion</td>
+                    <td>@e.IdUsuarioUltimaModificacion</td>
+                    <td>
+                        <button class="btn btn-secondary" @onclick="() => ModificarExpediente(e.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="() => EliminarExpediente(e.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 @code
 {
     List<Expediente> _expedientes;
+    private Expediente _expedienteFiltrado;
+    private string busquedaId;
+    private string errorMensaje;
     
     private void AgregarExpediente(){
         Navegador.NavigateTo("agregar-expediente");
@@ -60,6 +111,37 @@
             Console.WriteLine("Error al eliminar el expediente: " + e.Message);
         }
     }
+
+    private void BuscarExpediente()
+    {
+        errorMensaje = null;
+        if (int.TryParse(busquedaId, out int id))
+        {
+            try
+            {
+                _expedienteFiltrado = CasoDeUsoExpedienteConsultarPorID.Ejecutar(id);
+                _expedientes = null; // Limpiar la lista de todos los expedientes
+            }
+            catch (RepositorioException e)
+            {
+                errorMensaje = "Error: " + e.Message;
+                _expedienteFiltrado = null;
+            }
+        }
+        else
+        {
+            errorMensaje = "ID de expediente inválido";
+            _expedienteFiltrado = null;
+        }
+    }
+
+    private void MostrarTodos()
+    {
+        _expedienteFiltrado = null; // Limpiar el expediente filtrado
+        errorMensaje = null; // Limpiar cualquier mensaje de error
+        _expedientes = CasoDeUsoExpedienteConsultarTodos.Ejecutar(); // Cargar todos los expedientes
+    }
+
 
     protected override void OnInitialized()
     {
