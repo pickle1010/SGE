@@ -13,6 +13,8 @@ builder.Services.AddScoped<IUsuarioRepositorio, RepositorioUsuario>();
 builder.Services.AddScoped<IExpedienteRepositorio, RepositorioExpediente>();
 builder.Services.AddScoped<ITramiteRepositorio, RepositorioTramite>();
 
+builder.Services.AddTransient<EmailValidador>();
+builder.Services.AddTransient<LogInValidador>();
 builder.Services.AddTransient<UsuarioValidador>();
 builder.Services.AddTransient<ExpedienteValidador>();
 builder.Services.AddTransient<TramiteValidador>();
@@ -21,12 +23,14 @@ builder.Services.AddTransient<IEspecificacionCambioEstado, EspecificacionCambioE
 builder.Services.AddTransient<IServicioActualizacionEstado, ServicioActualizacionEstado>();
 builder.Services.AddTransient<IServicioAutorizacion, ServicioAutorizacion>();
 builder.Services.AddSingleton<IServicioHashing, ServicioHashing>();
+builder.Services.AddSingleton<IServicioGestionDeSesion, ServicioGestionDeSesion>();
 
 builder.Services.AddTransient<CasoDeUsoUsuarioAlta>();
 builder.Services.AddTransient<CasoDeUsoUsuarioBaja>();
 builder.Services.AddTransient<CasoDeUsoUsuarioModificacion>();
 builder.Services.AddTransient<CasoDeUsoUsuarioConsultarTodos>();
 builder.Services.AddTransient<CasoDeUsoUsuarioEditarPerfil>();
+builder.Services.AddTransient<CasoDeUsoUsuarioIniciarSesion>();
 
 builder.Services.AddTransient<CasoDeUsoExpedienteAlta>();
 builder.Services.AddTransient<CasoDeUsoExpedienteBaja>();
