@@ -19,14 +19,30 @@ else
     <h3>Buscar Expediente</h3>
     
     <DialogoConfirmacion @ref="dialogo"/>
+    <div style="width:70%">
+        <form>
+            <label>
+                <input @bind="busquedaId" placeholder="Ingrese ID del expediente" class="form-control" style="margin-right: 10px"/>
+            </label>
+            
+            <label>
+                <button class="btn btn-primary" @onclick="BuscarExpediente" style="margin-right: 10px">Buscar</button>
+            </label>
 
-    <input @bind="busquedaId" placeholder="Ingrese ID del expediente" />
-    <button class="btn btn-primary" @onclick="BuscarExpediente">Buscar</button>
-    @if(ServicioAutorizacion.PoseeElPermiso(_session_user.Id, Permiso.ExpedienteAlta))
-    {
-        <button class="btn btn-primary" @onclick="AgregarExpediente">Agregar Expediente</button>
-    }
-    <button class="btn btn-secondary" @onclick="MostrarTodos">Mostrar Todos</button>
+        @if(ServicioAutorizacion.PoseeElPermiso(_session_user.Id, Permiso.ExpedienteAlta))
+        {
+            <label>
+                <button class="btn btn-primary" style="margin-right: 10px" @onclick="AgregarExpediente">Agregar Expediente</button>
+            </label>
+            
+        }
+        
+        <label>
+            <button class="btn btn-secondary" style="margin-right: 10px" @onclick="MostrarTodos">Mostrar Todos</button>
+        </label>
+        </form>
+    </div>
+    
 
 
     @if (!string.IsNullOrEmpty(errorMensaje))

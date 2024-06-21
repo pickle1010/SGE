@@ -21,19 +21,36 @@ else
 
     <DialogoConfirmacion @ref="dialogo"/>
 
-    <InputSelect @bind-Value="busquedaEtiqueta">
-        <option value="">Seleccione una etiqueta</option>
-        @foreach (var etiqueta in Enum.GetValues(typeof(EtiquetaTramite)))
-        {
-            <option value="@etiqueta">@etiqueta</option>
-        }
-    </InputSelect>
-    <button class="btn btn-primary" @onclick="BuscarTramite">Buscar</button>
-    @if(ServicioAutorizacion.PoseeElPermiso(_session_user.Id, Permiso.TramiteAlta))
-    {
-        <button class="btn btn-primary" @onclick="AgregarTramite">Agregar Tramite</button>
-    }
-    <button class="btn btn-secondary" @onclick="MostrarTodos">Mostrar Todos</button>
+    <div style="width:70%">
+        <form>
+            <label>
+                <InputSelect @bind-Value="busquedaEtiqueta" class="form-select" style="margin-right: 10px">
+                    <option value="">Seleccione una etiqueta</option>
+                    @foreach (var etiqueta in Enum.GetValues(typeof(EtiquetaTramite)))
+                {
+                    <option value="@etiqueta">@etiqueta</option>
+                }
+                </InputSelect>
+            </label>
+
+            <label>
+                <button class="btn btn-primary" @onclick="BuscarTramite" style  ="margin-right: 10px">Buscar</button>
+            </label>
+    
+            @if(ServicioAutorizacion.PoseeElPermiso(_session_user.Id, Permiso.      TramiteAlta))
+            {
+                <label>
+                    <button class="btn btn-primary" @onclick="AgregarTramite"   style="margin-right: 10px">Agregar Tramite</button>   
+                </label>
+        
+            }
+            <label>
+                <button class="btn btn-secondary" @onclick="MostrarTodos"       style="margin-right: 10px">Mostrar Todos</button>
+            </label>
+
+        </form>
+    </div>
+    
 
     @if (!string.IsNullOrEmpty(errorMensaje))
     {

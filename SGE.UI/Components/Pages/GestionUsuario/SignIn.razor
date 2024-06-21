@@ -6,28 +6,30 @@
 @inject CasoDeUsoUsuarioBaja CasoDeUsoUsuarioBaja
 @inject NavigationManager Navegador
 
-<h3>Registrarse</h3>
-
-<EditForm Model="@user_registro" OnValidSubmit="Registrar">
-    <div>
-        <label for="nombre">Nombre:</label>
-        <InputText required id="nombre" @bind-Value="user_registro.Nombre" />
-    </div>
-    <div>
-        <label for="apellido">Apellido:</label>
-        <InputText id="apellido" @bind-Value="user_registro.Apellido" />
-    </div>
-    <div>
-        <label for="email">Correo Electrónico:</label>
-        <InputText required id="email" @bind-Value="user_registro.Email" />
-    </div>
-    <div>
-        <label for="contraseña">Contraseña:</label>
-        <InputText required id="contraseña" type="password" @bind-Value="user_registro.Contraseña" />
-    </div>
-    <button type="submit">Registrarse</button>
-</EditForm>
-
+<div class="mb-3">
+    <h1>Registrarse</h1>
+</div>
+<div style="width:50%">
+    <EditForm Model="@user_registro" OnValidSubmit="Registrar">
+        <div class="mb-3">
+            <label for="nombre" class="form-label" >Nombre:</label>
+            <InputText required id="nombre"  class="form-control" @bind-Value="user_registro.Nombre" />
+        </div>
+        <div class="mb-3">
+            <label for="apellido" class="form-label" >Apellido:</label>
+            <InputText id="apellido" class="form-control" @bind-Value="user_registro.Apellido" />
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Correo Electrónico:</label>
+            <InputText required id="email" class="form-control" @bind-Value="user_registro.Email" />
+        </div>
+        <div class="mb-3">
+            <label for="contraseña" class="form-label">Contraseña:</label>
+            <InputText required id="contraseña" class="form-control" type="password" @bind-Value="user_registro.Contraseña" />
+        </div>
+        <button type="submit" class="btn btn-primary">Registrarse</button>
+    </EditForm>
+</div>
 @if (mensaje != ""){
     <p style="color: red">@mensaje</p>
 }
