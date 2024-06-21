@@ -53,6 +53,12 @@ public class RepositorioTramite : ITramiteRepositorio
         return tramite;
     }
 
+    public List<Tramite> ConsultarTodos(){
+        using var context = new SGEContext();
+        return context.Tramites.ToList();
+    }
+
+
     public List<Tramite> ConsultarPorExpediente(int expedienteID){
         using var context = new SGEContext();
         var tramites = context.Tramites.Where(t => t.ExpedienteId == expedienteID).ToList();

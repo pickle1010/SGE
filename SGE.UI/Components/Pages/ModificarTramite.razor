@@ -1,0 +1,63 @@
+@page "/modificar-tramite/{id:int}"
+@rendermode InteractiveServer
+@inject CasoDeUsoTramiteModificacion CasoDeUsoTramiteModificacion
+@inject ITramiteRepositorio RepositorioTramite
+@inject NavigationManager Navegador
+
+<PageTitle>SGE - Modificar Tramite</PageTitle>
+<h3>Modificar Tramite</h3>
+
+<EditForm Model="@tramite" OnValidSubmit="ModificarTramiteValido">
+    
+    <div class="form-group">
+        <label for="IDExpediente">ID Expediente:</label>
+        <InputNumber id="idExpediente" @bind-Value="tramite.ExpedienteId" />
+    </div>    
+
+    <div>
+        <label for="Contenido">Contenido:</label>
+        <InputText id="contenido" @bind-Value="tramite.Contenido" />
+    </div>
+
+    <div class="form-group">
+        <label for="Etiqueta">Etiqueta:</label>
+        <InputSelect id="etiqueta" class="form-control" @bind-Value="tramite.Etiqueta">
+            @foreach (var etiqueta in Enum.GetValues(typeof(EtiquetaTramite)))
+            {
+                <option value="@etiqueta">@etiqueta</option>
+            }
+        </InputSelect>
+    </div>
+
+    <button type="submit">Agregar</button>
+</EditForm>
+
+@code {
+    [Parameter] public int id { get; set; }
+    private Tramite tramite= new Tramite();
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            tramite = RepositorioTramite.ConsultarPorId(id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error al cargar el expediente: " + e.Message);
+            // Manejo de errores adicional si es necesario
+        }
+    }
+    private void ModificarTramiteValido()
+    {
+        try
+        {
+            CasoDeUsoTramiteModificacion.Ejecutar(tramite, 1);
+            Navegador.NavigateTo("tramites");
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine("Tramite Invalido: " + e.Message);
+        }
+    }
+}

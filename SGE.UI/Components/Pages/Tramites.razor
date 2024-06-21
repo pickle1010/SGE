@@ -1,28 +1,170 @@
 @page "/tramites"
+@rendermode InteractiveServer
+@inject CasoDeUsoTramiteConsultarTodos CasoDeUsoTramiteConsultarTodos
+@inject CasoDeUsoTramiteBaja CasoDeUsoTramiteBaja
+@inject CasoDeUsoTramiteConsultaPorEtiqueta CasoDeUsoTramiteConsultaPorEtiqueta
+@inject NavigationManager Navegador
 
-<PageTitle>SGE - Trámites</PageTitle>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Id del expediente</th>
-            <th>Etiqueta</th>
-            <th>Contenido</th>
-            <th>Fecha y Hora de Creacion</th>
-            <th>Fecha y Hora de Modificación</th>
-            <th>Modificado por</th>
-        </tr>
-    </thead>
-    <tbody>
-        @* @foreach (var t in _tramites)
-        {
+<PageTitle>SGE - Tramites</PageTitle>
+
+<h3>Buscar Tramite</h3>
+<InputSelect @bind-Value="busquedaEtiqueta">
+    <option value="">Seleccione una etiqueta</option>
+    @foreach (var etiqueta in Enum.GetValues(typeof(EtiquetaTramite)))
+    {
+        <option value="@etiqueta">@etiqueta</option>
+    }
+</InputSelect>
+<button class="btn btn-primary" @onclick="BuscarTramite">Buscar</button>
+<button class="btn btn-primary" @onclick="AgregarTramite">Agregar Tramite</button>
+<button class="btn btn-secondary" @onclick="MostrarTodos">Mostrar Todos</button>
+
+@if (!string.IsNullOrEmpty(errorMensaje))
+{
+    <div class="alert alert-danger">@errorMensaje</div>
+}
+
+@if (_tramitesFiltrados != null && _tramitesFiltrados.Count > 0)
+{
+    <h3>Resultado de la Búsqueda</h3>
+    <table class="table">
+        <thead>
             <tr>
-                <td>@t.Id</td>
-                <td>@t.Nombre</td>
-                <td>@t.Apellido</td>
-                <td>@t.Email</td>
-                <td>@t.Contraseña</td>
+                <th>Id</th>
+                <th>ExpedienteId</th>
+                <th>Etiqueta</th>
+                <th>Contenido</th>
+                <th>Fecha y Hora de Creacion</th>
+                <th>Fecha y Hora de Modificación</th>
+                <th>Modificado por</th>
+                <th>Acciones</th>
             </tr>
-        } *@
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var t in _tramitesFiltrados)
+            {
+                <tr>
+                    <td>@t.Id</td>
+                    <td>@t.ExpedienteId</td>
+                    <td>@t.Etiqueta</td>
+                    <td>@t.Contenido</td>
+                    <td>@t.FechaHoraCreacion</td>
+                    <td>@t.FechaHoraUltimaModificacion</td>
+                    <td>@t.IdUsuarioUltimaModificacion</td>
+                    <td>
+                        <button class="btn btn-secondary" @onclick="() => ModificarTramite(t.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="() => EliminarTramite(t.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (_tramitesFiltrados == null && !string.IsNullOrEmpty(errorMensaje))
+{
+    <h3>No se encontraron trámites con la etiqueta seleccionada</h3>
+}
+else
+{
+    <h3>Todos los Tramites</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>ExpedienteId</th>
+                <th>Etiqueta</th>
+                <th>Contenido</th>
+                <th>Fecha y Hora de Creacion</th>
+                <th>Fecha y Hora de Modificación</th>
+                <th>Modificado por</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in _tramites)
+            {
+                <tr>
+                    <td>@t.Id</td>
+                    <td>@t.ExpedienteId</td>
+                    <td>@t.Etiqueta</td>
+                    <td>@t.Contenido</td>
+                    <td>@t.FechaHoraCreacion</td>
+                    <td>@t.FechaHoraUltimaModificacion</td>
+                    <td>@t.IdUsuarioUltimaModificacion</td>
+                    <td>
+                        <button class="btn btn-secondary" @onclick="() => ModificarTramite(t.Id)">Editar</button>
+                        <button class="btn btn-danger" @onclick="() => EliminarTramite(t.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code
+{
+    List<Tramite> _tramites;
+    List<Tramite> _tramitesFiltrados;
+    private EtiquetaTramite? busquedaEtiqueta;
+    private string errorMensaje;
+    
+    private void AgregarTramite(){
+        Navegador.NavigateTo("agregar-tramite");
+    }
+
+    private void ModificarTramite(int Id){
+        Navegador.NavigateTo($"/modificar-tramite/{Id}");
+    }
+
+    private void EliminarTramite(int Id)
+    {
+        try
+        {
+            CasoDeUsoTramiteBaja.Ejecutar(Id, 1);
+            _tramites = CasoDeUsoTramiteConsultarTodos.Ejecutar();
+            _tramitesFiltrados = null;
+        }
+        catch (Exception e)
+        {
+            errorMensaje = "Error al eliminar el tramite: " + e.Message;
+        }
+    }
+
+    private void BuscarTramite()
+    {
+        errorMensaje = null;
+        if (busquedaEtiqueta.HasValue)
+        {
+            try
+            {
+                _tramitesFiltrados = CasoDeUsoTramiteConsultaPorEtiqueta.Ejecutar(busquedaEtiqueta.Value);
+                if (_tramitesFiltrados == null || _tramitesFiltrados.Count == 0)
+                {
+                    errorMensaje = "No se encontraron trámites con la etiqueta seleccionada";
+                }
+            }
+            catch (RepositorioException e)
+            {
+                errorMensaje = "Error: " + e.Message;
+                _tramitesFiltrados = null;
+            }
+        }
+        else
+        {
+            errorMensaje = "Etiqueta de trámite inválida";
+            _tramitesFiltrados = null;
+        }
+    }
+
+    private void MostrarTodos()
+    {
+        _tramitesFiltrados = null; // Limpiar los trámites filtrados
+        errorMensaje = null; // Limpiar cualquier mensaje de error
+        _tramites = CasoDeUsoTramiteConsultarTodos.Ejecutar(); // Cargar todos los trámites
+    }
+
+    protected override void OnInitialized()
+    {
+        _tramites = CasoDeUsoTramiteConsultarTodos.Ejecutar();
+    }
+}

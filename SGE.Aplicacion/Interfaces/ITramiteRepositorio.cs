@@ -7,5 +7,6 @@ public interface ITramiteRepositorio
     void Modificar(Tramite tramite);
     List<Tramite> ConsultarPorEtiqueta(EtiquetaTramite etiqueta);
     Tramite? ConsultarPorId(int tramiteID);
+    List<Tramite> ConsultarTodos();
     List<Tramite> ConsultarPorExpediente(int expedienteID);
 }
