@@ -16,6 +16,11 @@ else
     <PageTitle>SGE - Modificar Tramite</PageTitle>
     <h3>Modificar Tramite</h3>
 
+    @if (!string.IsNullOrEmpty(errorMensaje))
+    {
+        <div class="alert alert-danger">@errorMensaje</div>
+    }
+
     <EditForm Model="@tramite" OnValidSubmit="ModificarTramiteValido">
         
         <div class="form-group">
@@ -46,6 +51,7 @@ else
     [Parameter] public int id { get; set; }
     private Tramite tramite= new Tramite();
     private Usuario? _session_user;
+    private string errorMensaje;
 
     protected override void OnInitialized()
     {
@@ -56,7 +62,7 @@ else
         }
         catch (Exception e)
         {
-            Console.WriteLine("Error al cargar el expediente: " + e.Message);
+            Console.WriteLine("Error al cargar el trámite: " + e.Message);
             // Manejo de errores adicional si es necesario
         }
     }
@@ -69,7 +75,7 @@ else
         }
         catch(Exception e)
         {
-            Console.WriteLine("Tramite Invalido: " + e.Message);
+            errorMensaje = "Trámite Inválido: " + e.Message;
         }
     }
 }

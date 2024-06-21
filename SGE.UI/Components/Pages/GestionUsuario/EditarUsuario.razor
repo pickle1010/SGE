@@ -17,11 +17,23 @@ else
     {
         <PageTitle>SGE - Editar Mi Perfil</PageTitle>
         <h3>Editar Mi Perfil</h3>
+
+        @if (!string.IsNullOrEmpty(errorMensaje))
+        {
+            <div class="alert alert-danger">@errorMensaje</div>
+        }
+        
     }
     else
     {
         <PageTitle>SGE - Editar Usuario</PageTitle>
         <h3>Editar Usuario</h3>
+        
+        @if (!string.IsNullOrEmpty(errorMensaje))
+        {
+            <div class="alert alert-danger">@errorMensaje</div>
+        }
+
         <h4>Modificando al Usuario "@_usuario.Nombre"</h4>
     }
 
@@ -67,6 +79,7 @@ else
     private bool passwordCambiada = false;
     private bool editandoPerfil = false;
     [Parameter] public int id { get; set; }
+    private string errorMensaje;
 
     private Permiso[] permisosDisponibles;
     private bool[] isChecked;
@@ -159,7 +172,7 @@ else
         }
         catch (Exception e)
         {
-            Console.WriteLine("Usuario Invalido: " + e.Message);
+            errorMensaje = "Usuario Inválido: " + e.Message;
         }
     }
 

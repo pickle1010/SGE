@@ -11,7 +11,7 @@
 <EditForm Model="@user_registro" OnValidSubmit="Registrar">
     <div>
         <label for="nombre">Nombre:</label>
-        <InputText id="nombre" @bind-Value="user_registro.Nombre" />
+        <InputText required id="nombre" @bind-Value="user_registro.Nombre" />
     </div>
     <div>
         <label for="apellido">Apellido:</label>
@@ -19,14 +19,19 @@
     </div>
     <div>
         <label for="email">Correo Electrónico:</label>
-        <InputText id="email" @bind-Value="user_registro.Email" />
+        <InputText required id="email" @bind-Value="user_registro.Email" />
     </div>
     <div>
         <label for="contraseña">Contraseña:</label>
-        <InputText id="contraseña" type="password" @bind-Value="user_registro.Contraseña" />
+        <InputText required id="contraseña" type="password" @bind-Value="user_registro.Contraseña" />
     </div>
     <button type="submit">Registrarse</button>
 </EditForm>
+
+@if (mensaje != ""){
+    <p style="color: red">@mensaje</p>
+}
+
 
 @code {
 
@@ -34,6 +39,7 @@
     private SignInModel user_registro = new SignInModel();
     private List<Usuario> _usuarios;
     private int cantidadUsuarios;
+    private string mensaje = "";
 
     protected override void OnInitialized()
     {
@@ -65,6 +71,7 @@
         }
         catch(Exception e)
         {
+            mensaje = e.Message;
             Console.WriteLine("Usuario Invalido: " + e.Message);
         }
     }

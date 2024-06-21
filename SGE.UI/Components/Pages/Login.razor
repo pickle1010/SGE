@@ -10,19 +10,25 @@
 </div>
 
 <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+
     <div class="mb-3">
         <label for="email" class="form-label">Correo Electrónico:</label>
-        <InputText id="email" class="form-control" @bind-Value="loginModel.Email" />
+        <InputText required id="email" class="form-control" @bind-Value="loginModel.Email" />
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">Contraseña:</label>
-        <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" />
+        <InputText required id="password" type="password" class="form-control" @bind-Value="loginModel.Password" />
     </div>
     <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
 </EditForm>
 
+@if (mensaje != ""){
+    <p style="color: red">@mensaje</p>
+}
+
 @code {
     private LoginModel loginModel = new LoginModel();
+    private string mensaje = "";
 
     private void HandleLogin()
     {
@@ -42,6 +48,7 @@
         catch (Exception e)
         {
             // Manejar errores de inicio de sesión
+            mensaje = e.Message;
             Console.WriteLine("Inicio de sesión fallido:\n" + e.Message);
         }
     }

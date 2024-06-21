@@ -15,6 +15,11 @@ else
     <PageTitle>SGE - Agregar Tramite</PageTitle>
     <h3>Agregar Tramite</h3>
 
+    @if (!string.IsNullOrEmpty(errorMensaje))
+    {
+        <div class="alert alert-danger">@errorMensaje</div>
+    }
+
     <EditForm Model="@tramite" OnValidSubmit="AgregarTramiteValido">
         
         <div class="form-group">
@@ -44,6 +49,7 @@ else
 @code {
     private Tramite tramite= new Tramite();
     private Usuario? _session_user;
+    private string errorMensaje;
 
     protected override void OnInitialized()
     {
@@ -59,7 +65,7 @@ else
         }
         catch(Exception e)
         {
-            Console.WriteLine("Tramite Invalido: " + e.Message);
+            errorMensaje = "Trámite Inválido: " + e.Message;
         }
     }
 }
