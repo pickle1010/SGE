@@ -17,22 +17,22 @@ else
     <PageTitle>SGE - Agregar Usuario</PageTitle>
     <h3>Agregar Usuario</h3>
 
-    <EditForm Model="@usuario" OnValidSubmit="AgregarUsuarioValido">
+    <EditForm Model="@_added_user" OnValidSubmit="AgregarUsuarioValido">
         <div>
             <label for="nombre">Nombre:</label>
-            <InputText id="nombre" @bind-Value="usuario.Nombre" />
+            <InputText id="nombre" @bind-Value="_added_user.Nombre" />
         </div>
         <div>
             <label for="apellido">Apellido:</label>
-            <InputText id="apellido" @bind-Value="usuario.Apellido" />
+            <InputText id="apellido" @bind-Value="_added_user.Apellido" />
         </div>
         <div>
             <label for="email">Correo Electrónico:</label>
-            <InputText id="email" @bind-Value="usuario.Email" />
+            <InputText id="email" @bind-Value="_added_user.Email" />
         </div>
         <div>
             <label for="contraseña">Contraseña:</label>
-            <InputText id="contraseña" type="password" @bind-Value="usuario.Contraseña" />
+            <InputText id="contraseña" type="password" @bind-Value="_added_user.Contraseña" />
         </div>
         <button type="submit">Agregar</button>
     </EditForm>
@@ -41,6 +41,7 @@ else
 @code {
     private Usuario usuario = new Usuario();
     private Usuario? _session_user;
+    private AddUserModel _added_user = new AddUserModel();
     private bool usuarioAutorizado = false;
 
     protected override void OnInitialized()
@@ -53,7 +54,11 @@ else
     {
         try
         {
-            CasoDeUsoUsuarioAlta.Ejecutar(usuario, ServicioGestionDeSesion.ObtenerUsuario().Id);
+            usuario.Nombre = _added_user.Nombre;
+            usuario.Apellido = _added_user.Apellido;
+            usuario.Email = _added_user.Email;
+            usuario.Contraseña = _added_user.Contraseña;
+            CasoDeUsoUsuarioAlta.Ejecutar(usuario, _session_user.Id);
             Navegador.NavigateTo("usuarios");
         }
         catch(Exception e)
@@ -61,5 +66,12 @@ else
             Console.WriteLine("Usuario Invalido: " + e.Message);
         }
     }
-    
+
+    private class AddUserModel
+    {
+        public string? Nombre;
+        public string? Apellido;
+        public string? Email;
+        public string? Contraseña;
+    }
 }
