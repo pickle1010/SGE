@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject IServicioGestionDeSesion ServicioGestionDeSesion
+@inject NavigationManager Navegador
 
 <div class="page">
     <div class="sidebar">
@@ -7,7 +9,19 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            @if(sesionIniciada)
+            {
+                <a href="miperfil">Mi Perfil</a>
+            }
+            else
+            {
+                <NavLink class="nav-link" href="login">
+                    <button class="btn btn-primary">Iniciar Sesión</button>
+                </NavLink>
+                <NavLink class="nav-link" href="sign-in">
+                    <button class="btn btn-primary">Registrarse</button>
+                </NavLink>
+            }
         </div>
 
         <article class="content px-4">
@@ -21,3 +35,12 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code {
+    private bool sesionIniciada = false;
+
+    protected override void OnInitialized()
+    {
+        sesionIniciada = ServicioGestionDeSesion.ObtenerUsuario() != null;
+    }
+}

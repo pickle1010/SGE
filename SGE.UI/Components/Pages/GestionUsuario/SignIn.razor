@@ -1,12 +1,12 @@
 ﻿@page "/sign-in"
 @rendermode InteractiveServer
+@inject IServicioGestionDeSesion ServicioGestionDeSesion
 @inject CasoDeUsoUsuarioConsultarTodos CasoDeUsoUsuarioConsultarTodos
 @inject CasoDeUsoUsuarioRegistrar CasoDeUsoUsuarioRegistrar
 @inject CasoDeUsoUsuarioBaja CasoDeUsoUsuarioBaja
 @inject NavigationManager Navegador
 
-
-<h3>Sign In</h3>
+<h3>Registrarse</h3>
 
 <EditForm Model="@usuario" OnValidSubmit="Registrar">
     <div>
@@ -27,9 +27,6 @@
     </div>
     <button type="submit">Registrarse</button>
 </EditForm>
-
-
-
 
 @code {
 
@@ -58,6 +55,7 @@
                 usuario.EsAdmin = true;
             }
             CasoDeUsoUsuarioRegistrar.Ejecutar(usuario);
+            ServicioGestionDeSesion.IniciarSesion(usuario);
             Navegador.NavigateTo("/");
         }
         catch(Exception e)

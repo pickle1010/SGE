@@ -15,6 +15,16 @@ public class RepositorioUsuario : IUsuarioRepositorio
         context.SaveChanges();
     }
 
+    public Usuario ConsultarPorEmail(string email)
+    {
+        using var context = new SGEContext();
+        var usuario = context.Usuarios.Where(u => u.Email == email).SingleOrDefault();
+        if(usuario == null){
+            throw new RepositorioException($"No existe usuario que tenga el email #{email}");
+        }
+        return usuario;
+    }
+
     public Usuario ConsultarPorID(int id){
         using var context = new SGEContext();
         var usuario = context.Usuarios.Where(u => u.Id == id).SingleOrDefault();

@@ -1,0 +1,49 @@
+@page "/login"
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+@inject IServicioGestionDeSesion ServicioGestionDeSesion
+@inject CasoDeUsoUsuarioIniciarSesion CasoDeUsoUsuarioIniciarSesion
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+    <div>
+        <label for="email">Correo Electrónico:</label>
+        <InputText id="email" @bind-Value="loginModel.Email" />
+    </div>
+    <div>
+        <label for="password">Contraseña:</label>
+        <InputText id="password" type="password" @bind-Value="loginModel.Password" />
+    </div>
+    <button type="submit">Iniciar Sesión</button>
+</EditForm>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+
+    private void HandleLogin()
+    {
+        try 
+        {
+            Usuario u = CasoDeUsoUsuarioIniciarSesion.Ejecutar(loginModel.Email, loginModel.Password);
+            if(u == null)
+            {
+                Console.WriteLine("No hay un usuario con sesion");
+            }
+            else
+            {
+                Console.WriteLine(u);
+            }
+            Navigation.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+            // Manejar errores de inicio de sesión
+            Console.WriteLine("Inicio de sesión fallido:\n" + e.Message);
+        }
+    }
+
+    private class LoginModel
+    {
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+    }
+}

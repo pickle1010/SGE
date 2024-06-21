@@ -1,15 +1,22 @@
 ﻿@page "/editar-usuario/{Id:int?}"
 @rendermode InteractiveServer
+@inject IServicioGestionDeSesion ServicioGestionDeSesion
 @inject CasoDeUsoUsuarioConsultarPorId CasoDeUsoUsuarioConsultarPorId
 @inject CasoDeUsoUsuarioModificacion CasoDeUsoUsuarioModificacion
 @inject CasoDeUsoUsuarioEditarPerfil CasoDeUsoUsuarioEditarPerfil
 @inject NavigationManager Navegador
 
-
-<PageTitle>SGE - Editar Usuario</PageTitle>
-<h3>Editar Usuario</h3>
-<h4>Modificando al Usuario "@_usuario.Nombre"</h4>
-
+@if(editandoPerfil)
+{
+    <PageTitle>SGE - Editar Mi Perfil</PageTitle>
+    <h3>Editar Mi Perfil</h3>
+}
+else
+{
+    <PageTitle>SGE - Editar Usuario</PageTitle>
+    <h3>Editar Usuario</h3>
+    <h4>Modificando al Usuario "@_usuario.Nombre"</h4>
+}
 
 <EditForm Model="@_usuario" OnValidSubmit="ModificarUsuarioValido">
     <div>
@@ -31,20 +38,23 @@
     <button type="submit" class="btn btn-primary">Guardar cambios</button>
 </EditForm>
 
-
-
-
 @code {
     Usuario _usuario = new Usuario();
+    string? password;
+    Usuario? _session_user;
     bool passwordCambiada = false;
-    int idUsuarioTemporal = 1; //Variable temporal ya que no tengo sesion iniciada
+    bool editandoPerfil = false;
     [Parameter] public int id { get; set; }
 
     protected override void OnInitialized()
     {
+        _session_user = ServicioGestionDeSesion.ObtenerUsuario();
         try
         {
             _usuario = CasoDeUsoUsuarioConsultarPorId.Ejecutar(id);
+            password = _usuario.Contraseña;
+            _usuario.Contraseña = "";
+            editandoPerfil = (_session_user.Id == _usuario.Id);
         }
         catch (Exception e)
         {
@@ -53,18 +63,22 @@
         }
     }
 
-
     private void ModificarUsuarioValido()
     {
         try
         {
-            if (idUsuarioTemporal == 1)
+            passwordCambiada = (_usuario.Contraseña != "");
+            if(!passwordCambiada)
             {
-                CasoDeUsoUsuarioModificacion.Ejecutar(_usuario, idUsuarioTemporal, passwordCambiada);
+                _usuario.Contraseña = password;
+            }
+            if (editandoPerfil)
+            {
+                CasoDeUsoUsuarioEditarPerfil.Ejecutar(_usuario, _session_user.Id, passwordCambiada);
             }
             else
             {
-                CasoDeUsoUsuarioEditarPerfil.Ejecutar(_usuario, idUsuarioTemporal, passwordCambiada);
+                CasoDeUsoUsuarioModificacion.Ejecutar(_usuario, _session_user.Id, passwordCambiada);
             }
 
             Navegador.NavigateTo("/usuarios");

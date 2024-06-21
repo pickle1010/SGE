@@ -1,9 +1,9 @@
 @page "/agregar-usuario"
 @rendermode InteractiveServer
+@inject IServicioGestionDeSesion ServicioGestionDeSesion
 @inject CasoDeUsoUsuarioAlta CasoDeUsoUsuarioAlta
 @inject CasoDeUsoUsuarioRegistrar CasoDeUsoUsuarioRegistrar
 @inject NavigationManager Navegador
-
 
 <PageTitle>SGE - Agregar Usuario</PageTitle>
 <h3>Agregar Usuario</h3>
@@ -28,8 +28,6 @@
     <button type="submit">Agregar</button>
 </EditForm>
 
-
-
 @code {
     private Usuario usuario = new Usuario();
 
@@ -37,7 +35,7 @@
     {
         try
         {
-            CasoDeUsoUsuarioAlta.Ejecutar(usuario, 1);
+            CasoDeUsoUsuarioAlta.Ejecutar(usuario, ServicioGestionDeSesion.ObtenerUsuario().Id);
             Navegador.NavigateTo("usuarios");
         }
         catch(Exception e)

@@ -1,18 +1,35 @@
 ﻿@page "/"
+@inject IServicioGestionDeSesion ServicioGestionDeSesion
 @rendermode InteractiveServer
-@inject NavigationManager Navegador
 
 <PageTitle>Home</PageTitle>
 
-<h1>Welcome!</h1>
+<div class="d-flex align-items-center">
+    <div class="me-auto">
+        <h1>
+            Bienvenido
+            @if(u != null){
+                @:, @u.Nombre
+            }!
+        </h1>
+    </div>
+</div>
 
-<p> Bienvenidos al sistema de gestión de trámites y expedientes.</p>
-<button class="btn btn-primary" @onclick="Registrar">Registrarse</button>
+<p>Este es el sistema de gestión de trámites y expedientes.</p>
 
-
-@code{
-    private void Registrar()
+@code 
+{
+    Usuario? u;
+    protected override void OnInitialized()
     {
-        Navegador.NavigateTo("sign-in");
+        u = ServicioGestionDeSesion.ObtenerUsuario();
+        if(u == null)
+        {
+            Console.WriteLine("No hay un usuario con una sesion iniciada");
+        }
+        else
+        {
+            Console.WriteLine(u);
+        }
     }
 }

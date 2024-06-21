@@ -1,7 +1,7 @@
 ﻿namespace SGE.Aplicacion;
 using System.Text.RegularExpressions;
 
-public class UsuarioValidador
+public class UsuarioValidador(EmailValidador emailValidador)
 {
     public bool Validar(Usuario usuario, out string mensajeError, bool validarFormatoContraseña)
     {
@@ -18,27 +18,13 @@ public class UsuarioValidador
         {
             mensajeError += "Apellido del usuario no puede estar vacío.\n";
         }
-        else if (!Regex.IsMatch(usuario.Nombre, @"^[a-zA-Z]+$"))
+        else if (!Regex.IsMatch(usuario.Apellido, @"^[a-zA-Z]+$"))
         {
             mensajeError += "Apellido del usuario debe tener solo letras.\n";
         }
-        if (string.IsNullOrWhiteSpace(usuario.Email))
+        if(!emailValidador.Validar(usuario.Email, out string emailMensajeError))
         {
-            mensajeError += "Email del usuario no puede estar vacío\n";
-        }
-        else
-        {
-            try
-            {
-                if (!Regex.IsMatch(usuario.Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase))
-                {
-                    mensajeError += "Email del usuario no tiene el formato correcto.\n";
-                }
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                throw new RegexMatchTimeoutException("Validacion del email del usuario excedió el intervalo de tiempo necesario.\n");
-            }
+            mensajeError += emailMensajeError;
         }
         if (string.IsNullOrWhiteSpace(usuario.Contraseña))
         {

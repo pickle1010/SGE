@@ -1,0 +1,57 @@
+@page "/miperfil"
+@rendermode InteractiveServer
+@inject IServicioGestionDeSesion ServicioGestionDeSesion
+@inject NavigationManager Navigation
+
+<div class="d-flex align-items-center">
+    <div class="me-auto">
+        <h3>Perfil del Usuario</h3>
+    </div>
+    <button class="btn btn-danger" @onclick="CerrarSesion">Cerrar Sesión</button>
+</div>
+
+@if (usuario != null)
+{
+    <div class="card">
+        <div class="card-header">
+            Mi Perfil
+        </div>
+        <div class="card-body">
+            <p><strong>Nombre:</strong> @usuario.Nombre</p>
+            <p><strong>Apellido:</strong> @usuario.Apellido</p>
+            <p><strong>Email:</strong> @usuario.Email</p>
+            <ul>
+                @foreach (var p in @usuario.Permisos)
+                {
+                    <li>@p</li>
+                }
+            </ul>
+            <!-- Add other properties here -->
+        </div>
+    </div>
+}
+else
+{
+    <p>No hay información del usuario disponible.</p>
+    <button class="btn btn-primary" @onclick="IniciarSesion">Iniciar Sesión</button>
+}
+
+@code {
+    private Usuario? usuario;
+
+    protected override void OnInitialized()
+    {
+        usuario = ServicioGestionDeSesion.ObtenerUsuario();
+    }
+
+    private void IniciarSesion()
+    {
+        Navigation.NavigateTo("login");
+    }
+
+    private void CerrarSesion()
+    {
+        ServicioGestionDeSesion.CerrarSesion();
+        Navigation.NavigateTo("login");
+    }
+}
