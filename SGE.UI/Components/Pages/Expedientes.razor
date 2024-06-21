@@ -1,6 +1,7 @@
 @page "/expedientes"
 @rendermode InteractiveServer
 @inject CasoDeUsoExpedienteConsultarTodos CasoDeUsoExpedienteConsultarTodos
+@inject CasoDeUsoExpedienteBaja CasoDeUsoExpedienteBaja
 @inject NavigationManager Navegador
 
 <PageTitle>SGE - Expedientes</PageTitle>
@@ -28,6 +29,7 @@
                 <td>@e.IdUsuarioUltimaModificacion</td>
                 <td>
                     <button class="btn btn-secondary" @onclick="() => ModificarExpediente(e.Id)">Editar</button>
+                    <button class="btn btn-danger" @onclick="() => EliminarExpediente(e.Id)">Eliminar</button>
                 </td>
             </tr>
         }
@@ -44,6 +46,19 @@
 
     private void ModificarExpediente(int Id){
         Navegador.NavigateTo($"/modificar-expediente/{Id}");
+    }
+
+    private void EliminarExpediente(int Id)
+    {
+        try
+        {
+            CasoDeUsoExpedienteBaja.Ejecutar(Id, 1);
+            _expedientes = CasoDeUsoExpedienteConsultarTodos.Ejecutar(); 
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error al eliminar el expediente: " + e.Message);
+        }
     }
 
     protected override void OnInitialized()
