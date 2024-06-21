@@ -7,8 +7,13 @@ public class Usuario
     public string? Apellido { get; set; }
     public string? Email { get; set; }
     public string? Contraseña { get; set; }
-    public List<Permiso>? Permisos { get; set; }
+    public List<Permiso> Permisos { get; set; }
     public bool EsAdmin { get; set; } = false;
+
+    public Usuario()
+    {
+        Permisos = new List<Permiso>();
+    }
 
     public override string ToString()
     {
