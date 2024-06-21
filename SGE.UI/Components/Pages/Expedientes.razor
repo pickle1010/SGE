@@ -131,7 +131,7 @@ else
     {
         try
         {
-            CasoDeUsoExpedienteBaja.Ejecutar(Id, 1);
+            CasoDeUsoExpedienteBaja.Ejecutar(Id, _session_user.Id);
             _expedientes = CasoDeUsoExpedienteConsultarTodos.Ejecutar(); 
         }
         catch (Exception e)

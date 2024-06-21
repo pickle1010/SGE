@@ -146,7 +146,7 @@ else
     {
         try
         {
-            CasoDeUsoTramiteBaja.Ejecutar(Id, 1);
+            CasoDeUsoTramiteBaja.Ejecutar(Id, _session_user.Id);
             _tramites = CasoDeUsoTramiteConsultarTodos.Ejecutar();
             _tramitesFiltrados = null;
         }
