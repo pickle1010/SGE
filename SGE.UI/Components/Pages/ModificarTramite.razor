@@ -23,18 +23,18 @@ else
 
     <EditForm Model="@tramite" OnValidSubmit="ModificarTramiteValido">
         
-        <div class="form-group">
-            <label for="IDExpediente">ID Expediente:</label>
-            <InputNumber id="idExpediente" @bind-Value="tramite.ExpedienteId" />
+        <div class="mb-3">
+            <label for="IDExpediente" class="form-label">ID Expediente:</label>
+            <InputNumber id="idExpediente" class="form-control" @bind-Value="tramite.ExpedienteId" />
         </div>    
 
-        <div>
-            <label for="Contenido">Contenido:</label>
-            <InputText id="contenido" @bind-Value="tramite.Contenido" />
+        <div class="mb3">
+            <label for="Contenido" class="form-label">Contenido:</label>
+            <InputText id="contenido" class="form-control" @bind-Value="tramite.Contenido" />
         </div>
 
-        <div class="form-group">
-            <label for="Etiqueta">Etiqueta:</label>
+        <div class="mb-3">
+            <label for="Etiqueta" class="form-label">Etiqueta:</label>
             <InputSelect id="etiqueta" class="form-control" @bind-Value="tramite.Etiqueta">
                 @foreach (var etiqueta in Enum.GetValues(typeof(EtiquetaTramite)))
                 {

@@ -21,13 +21,13 @@ else
     }
 
     <EditForm Model="@expediente" OnValidSubmit="AgregarExpedienteValido">
-        <div>
-            <label for="Caratula">Caratula:</label>
-            <InputText id="caratula" @bind-Value="expediente.Caratula" />
+        <div class="mb-3">
+            <label for="Caratula" class="form-label">Caratula:</label>
+            <InputText id="caratula" class="form-control" @bind-Value="expediente.Caratula" />
         </div>
 
-        <div class="form-group">
-            <label for="Estado">Estado:</label>
+        <div class="mb-3">
+            <label for="Estado" class="form-label">Estado:</label>
             <InputSelect id="estado" class="form-control" @bind-Value="expediente.Estado">
                 @foreach (var estado in Enum.GetValues(typeof(EstadoExpediente)))
                 {
