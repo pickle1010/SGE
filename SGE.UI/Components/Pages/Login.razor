@@ -9,6 +9,11 @@
     <h1>Iniciar Sesion</h1>
 </div>
 
+@if (!string.IsNullOrEmpty(errorMensaje))
+{
+    <div class="alert alert-danger">@errorMensaje</div>
+}
+
 <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
 
     <div class="mb-3">
@@ -22,13 +27,9 @@
     <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
 </EditForm>
 
-@if (mensaje != ""){
-    <p style="color: red">@mensaje</p>
-}
-
 @code {
     private LoginModel loginModel = new LoginModel();
-    private string mensaje = "";
+    private string errorMensaje;
 
     private void HandleLogin()
     {
@@ -47,9 +48,7 @@
         }
         catch (Exception e)
         {
-            // Manejar errores de inicio de sesión
-            mensaje = e.Message;
-            Console.WriteLine("Inicio de sesión fallido:\n" + e.Message);
+            errorMensaje = "Inicio de sesión fallido: " + e.Message;
         }
     }
 
