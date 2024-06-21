@@ -27,6 +27,8 @@ builder.Services.AddTransient<CasoDeUsoUsuarioBaja>();
 builder.Services.AddTransient<CasoDeUsoUsuarioModificacion>();
 builder.Services.AddTransient<CasoDeUsoUsuarioConsultarTodos>();
 builder.Services.AddTransient<CasoDeUsoUsuarioEditarPerfil>();
+builder.Services.AddTransient<CasoDeUsoUsuarioRegistrar>(); 
+
 
 builder.Services.AddTransient<CasoDeUsoExpedienteAlta>();
 builder.Services.AddTransient<CasoDeUsoExpedienteBaja>();

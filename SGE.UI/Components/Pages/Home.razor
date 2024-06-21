@@ -1,7 +1,18 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@inject NavigationManager Navegador
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Welcome!</h1>
 
-Welcome to your new app.
+<p> Bienvenidos al sistema de gestión de trámites y expedientes.</p>
+<button class="btn btn-primary" @onclick="Registrar">Registrarse</button>
+
+
+@code{
+    private void Registrar()
+    {
+        Navegador.NavigateTo("sign-in");
+    }
+}

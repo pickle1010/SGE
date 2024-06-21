@@ -1,10 +1,14 @@
 @page "/usuarios"
 @rendermode InteractiveServer
 @inject CasoDeUsoUsuarioConsultarTodos CasoDeUsoUsuarioConsultarTodos
+@inject CasoDeUsoUsuarioBaja CasoDeUsoUsuarioBaja
 @inject NavigationManager Navegador
 
 <PageTitle>SGE - Usuarios</PageTitle>
 <button class="btn btn-primary" @onclick="AgregarUsuario">Agregar usuario</button>
+
+<DialogoConfirmacion @ref="dialogo"/>
+
 <table class="table">
     <thead>
         <tr>
@@ -12,7 +16,7 @@
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Email</th>
-            <th>Contraseña</th>
+            <th></th>
             <th>Acciones</th>
         </tr>
     </thead>
@@ -24,12 +28,12 @@
                 <td>@u.Nombre</td>
                 <td>@u.Apellido</td>
                 <td>@u.Email</td>
-                <td>@u.Contraseña</td>
+                <td>@(u.EsAdmin ? " Admin " : " ")</td>
                 <td>
                     <button class="btn btn-primary">
                         Editar
                     </button>
-                    <button class="btn btn-danger">
+                    <button class="btn btn-danger"@onclick="()=>ConfirmarEliminacion(u)">
                         Eliminar
                     </button>
                 </td>
@@ -40,11 +44,36 @@
 
 @code {
     private List<Usuario> _usuarios;
-    private void AgregarUsuario(){
-        Navegador.NavigateTo("agregar-usuario");
-    }
+    private Usuario usuario = new Usuario();
+    DialogoConfirmacion dialogo = null!;
+
     protected override void OnInitialized()
     {
         _usuarios = CasoDeUsoUsuarioConsultarTodos.Ejecutar();
     }
+
+    // Alta de Usuarios
+    private void AgregarUsuario()
+    {
+        Navegador.NavigateTo("agregar-usuario");
+    }
+
+    // Baja de Usuarios Mensaje confirmacion
+    private void ConfirmarEliminacion(Usuario usuario)
+    {
+        if (dialogo != null)
+        {
+            dialogo.Mostrar(
+                $"¿Desea eliminar al usuario {usuario.Nombre} {usuario.Apellido}?",
+                EventCallback.Factory.Create(this, () => EliminarUsuario(usuario))
+            );
+        }
+    }
+
+    private void EliminarUsuario(Usuario usuario)
+    {
+        CasoDeUsoUsuarioBaja.Ejecutar(usuario.Id, 1);
+        _usuarios = CasoDeUsoUsuarioConsultarTodos.Ejecutar();
+    }
+
 }

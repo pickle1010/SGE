@@ -1,6 +1,6 @@
 ﻿namespace SGE.Aplicacion;
 
-public class CasoDeUsoUsuarioEditarPerfil(IUsuarioRepositorio repo, UsuarioValidador validador, IServicioAutorizacion servicioAutorizacion, IServicioHashing servicioHashing)
+public class CasoDeUsoUsuarioEditarPerfil(IUsuarioRepositorio repo, UsuarioValidador validador, IServicioHashing servicioHashing)
 {
     public void Ejecutar(Usuario usuario, int idUsuario, bool contraseñaCambiada)
     {

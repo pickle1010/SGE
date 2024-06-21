@@ -1,7 +1,9 @@
 @page "/agregar-usuario"
 @rendermode InteractiveServer
 @inject CasoDeUsoUsuarioAlta CasoDeUsoUsuarioAlta
+@inject CasoDeUsoUsuarioRegistrar CasoDeUsoUsuarioRegistrar
 @inject NavigationManager Navegador
+
 
 <PageTitle>SGE - Agregar Usuario</PageTitle>
 <h3>Agregar Usuario</h3>
@@ -26,6 +28,8 @@
     <button type="submit">Agregar</button>
 </EditForm>
 
+
+
 @code {
     private Usuario usuario = new Usuario();
 
@@ -41,4 +45,5 @@
             Console.WriteLine("Usuario Invalido: " + e.Message);
         }
     }
+    
 }

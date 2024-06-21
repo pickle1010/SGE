@@ -1,0 +1,69 @@
+﻿@page "/sign-in"
+@rendermode InteractiveServer
+@inject CasoDeUsoUsuarioConsultarTodos CasoDeUsoUsuarioConsultarTodos
+@inject CasoDeUsoUsuarioRegistrar CasoDeUsoUsuarioRegistrar
+@inject CasoDeUsoUsuarioBaja CasoDeUsoUsuarioBaja
+@inject NavigationManager Navegador
+
+
+<h3>Sign In</h3>
+
+<EditForm Model="@usuario" OnValidSubmit="Registrar">
+    <div>
+        <label for="nombre">Nombre:</label>
+        <InputText id="nombre" @bind-Value="usuario.Nombre" />
+    </div>
+    <div>
+        <label for="apellido">Apellido:</label>
+        <InputText id="apellido" @bind-Value="usuario.Apellido" />
+    </div>
+    <div>
+        <label for="email">Correo Electrónico:</label>
+        <InputText id="email" @bind-Value="usuario.Email" />
+    </div>
+    <div>
+        <label for="contraseña">Contraseña:</label>
+        <InputText id="contraseña" type="password" @bind-Value="usuario.Contraseña" />
+    </div>
+    <button type="submit">Registrarse</button>
+</EditForm>
+
+
+
+
+@code {
+
+    private Usuario usuario = new Usuario();
+    private List<Usuario> _usuarios;
+    private int cantidadUsuarios;
+
+    protected override void OnInitialized()
+    {
+        cantidadUsuarios = VerificarBaseDeDatos();
+    }
+
+    private int VerificarBaseDeDatos()
+    {
+        _usuarios = CasoDeUsoUsuarioConsultarTodos.Ejecutar(); // Método para contar usuarios en el repositorio
+        return  _usuarios.Count;
+    }
+
+    private void Registrar()
+    {
+        try
+        {
+            if(cantidadUsuarios == 0)
+            {
+                Console.WriteLine("Se creo el primer usuario");
+                usuario.EsAdmin = true;
+            }
+            CasoDeUsoUsuarioRegistrar.Ejecutar(usuario);
+            Navegador.NavigateTo("inicio");
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine("Usuario Invalido: " + e.Message);
+        }
+    }
+
+}
