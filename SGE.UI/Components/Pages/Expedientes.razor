@@ -45,6 +45,7 @@
                 <td>
                     <button class="btn btn-secondary" @onclick="() => ModificarExpediente(_expedienteFiltrado.Id)">Editar</button>
                     <button class="btn btn-danger" @onclick="() => EliminarExpediente(_expedienteFiltrado.Id)">Eliminar</button>
+                    <button class="btn btn-info" @onclick="() => VerTramites(_expedienteFiltrado.Id)">Ver Trámites</button>
                 </td>
             </tr>
         </tbody>
@@ -78,6 +79,7 @@ else if (string.IsNullOrEmpty(errorMensaje))
                     <td>
                         <button class="btn btn-secondary" @onclick="() => ModificarExpediente(e.Id)">Editar</button>
                         <button class="btn btn-danger" @onclick="() => EliminarExpediente(e.Id)">Eliminar</button>
+                        <button class="btn btn-info" @onclick="() => VerTramites(e.Id)">Ver Trámites</button>
                     </td>
                 </tr>
             }
@@ -87,9 +89,9 @@ else if (string.IsNullOrEmpty(errorMensaje))
 @code
 {
     List<Expediente> _expedientes;
-    private Expediente _expedienteFiltrado;
+    private Expediente? _expedienteFiltrado;
     private string busquedaId;
-    private string errorMensaje;
+    private string? errorMensaje;
     
     private void AgregarExpediente(){
         Navegador.NavigateTo("agregar-expediente");
@@ -142,7 +144,10 @@ else if (string.IsNullOrEmpty(errorMensaje))
         _expedientes = CasoDeUsoExpedienteConsultarTodos.Ejecutar(); // Cargar todos los expedientes
     }
 
-
+    private void VerTramites(int Id)
+    {
+        Navegador.NavigateTo($"/mostrar-expediente/{Id}");
+    }
     protected override void OnInitialized()
     {
         _expedientes = CasoDeUsoExpedienteConsultarTodos.Ejecutar();
