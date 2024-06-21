@@ -15,6 +15,11 @@ else
     <PageTitle>SGE - Agregar Expediente</PageTitle>
     <h3>Agregar Expediente</h3>
 
+    @if (!string.IsNullOrEmpty(errorMensaje))
+    {
+        <div class="alert alert-danger">@errorMensaje</div>
+    }
+
     <EditForm Model="@expediente" OnValidSubmit="AgregarExpedienteValido">
         <div>
             <label for="Caratula">Caratula:</label>
@@ -38,6 +43,7 @@ else
 @code {
     private Expediente expediente = new Expediente();
     private Usuario? _session_user;
+    private string errorMensaje;
 
     protected override void OnInitialized()
     {
@@ -53,7 +59,7 @@ else
         }
         catch(Exception e)
         {
-            Console.WriteLine("Expediente Invalido: " + e.Message);
+            errorMensaje = "Expediente Inválido: " + e.Message;
         }
     }
 }

@@ -16,6 +16,11 @@ else
 {
     <PageTitle>SGE - Agregar Usuario</PageTitle>
     <h3>Agregar Usuario</h3>
+    
+    @if (!string.IsNullOrEmpty(errorMensaje))
+    {
+        <div class="alert alert-danger">@errorMensaje</div>
+    }
 
     <EditForm Model="@_added_user" OnValidSubmit="AgregarUsuarioValido">
         <div>
@@ -43,6 +48,7 @@ else
     private Usuario? _session_user;
     private AddUserModel _added_user = new AddUserModel();
     private bool usuarioAutorizado = false;
+    private string errorMensaje;
 
     protected override void OnInitialized()
     {
@@ -63,7 +69,7 @@ else
         }
         catch(Exception e)
         {
-            Console.WriteLine("Usuario Invalido: " + e.Message);
+            errorMensaje = "Usuario Inválido: " + e.Message;
         }
     }
 
