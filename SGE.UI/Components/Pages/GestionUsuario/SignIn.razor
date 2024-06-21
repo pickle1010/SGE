@@ -8,22 +8,22 @@
 
 <h3>Registrarse</h3>
 
-<EditForm Model="@usuario" OnValidSubmit="Registrar">
+<EditForm Model="@user_registro" OnValidSubmit="Registrar">
     <div>
         <label for="nombre">Nombre:</label>
-        <InputText required id="nombre" @bind-Value="usuario.Nombre" />
+        <InputText required id="nombre" @bind-Value="user_registro.Nombre" />
     </div>
     <div>
         <label for="apellido">Apellido:</label>
-        <InputText required id="apellido" @bind-Value="usuario.Apellido" />
+        <InputText id="apellido" @bind-Value="user_registro.Apellido" />
     </div>
     <div>
         <label for="email">Correo Electrónico:</label>
-        <InputText required id="email" @bind-Value="usuario.Email" />
+        <InputText required id="email" @bind-Value="user_registro.Email" />
     </div>
     <div>
         <label for="contraseña">Contraseña:</label>
-        <InputText required id="contraseña" type="password" @bind-Value="usuario.Contraseña" />
+        <InputText required id="contraseña" type="password" @bind-Value="user_registro.Contraseña" />
     </div>
     <button type="submit">Registrarse</button>
 </EditForm>
@@ -36,6 +36,7 @@
 @code {
 
     private Usuario usuario = new Usuario();
+    private SignInModel user_registro = new SignInModel();
     private List<Usuario> _usuarios;
     private int cantidadUsuarios;
     private string mensaje = "";
@@ -60,6 +61,10 @@
                 Console.WriteLine("Se creo el primer usuario");
                 usuario.EsAdmin = true;
             }
+            usuario.Nombre = user_registro.Nombre;
+            usuario.Apellido = user_registro.Apellido;
+            usuario.Email = user_registro.Email;
+            usuario.Contraseña = user_registro.Contraseña;
             CasoDeUsoUsuarioRegistrar.Ejecutar(usuario);
             ServicioGestionDeSesion.IniciarSesion(usuario);
             Navegador.NavigateTo("/");
@@ -71,4 +76,11 @@
         }
     }
 
+    private class SignInModel
+    {
+        public string? Nombre;
+        public string? Apellido;
+        public string? Email;
+        public string? Contraseña;
+    }
 }

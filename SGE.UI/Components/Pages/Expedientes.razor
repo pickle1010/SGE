@@ -17,6 +17,9 @@ else
 {
     <PageTitle>SGE - Expedientes</PageTitle>
     <h3>Buscar Expediente</h3>
+    
+    <DialogoConfirmacion @ref="dialogo"/>
+
     <input @bind="busquedaId" placeholder="Ingrese ID del expediente" />
     <button class="btn btn-primary" @onclick="BuscarExpediente">Buscar</button>
     @if(ServicioAutorizacion.PoseeElPermiso(_session_user.Id, Permiso.ExpedienteAlta))
@@ -61,7 +64,7 @@ else
                         }
                         @if(ServicioAutorizacion.PoseeElPermiso(_session_user.Id, Permiso.ExpedienteBaja))
                         {
-                            <button class="btn btn-danger" @onclick="() => EliminarExpediente(_expedienteFiltrado.Id)">Eliminar</button>
+                            <button class="btn btn-danger" @onclick="() => ConfirmarEliminacion(_expedienteFiltrado)">Eliminar</button>
                         }
                         <button class="btn btn-info" @onclick="() => VerTramites(_expedienteFiltrado.Id)">Ver Trámites</button>
                     </td>
@@ -101,7 +104,7 @@ else
                             }
                             @if(ServicioAutorizacion.PoseeElPermiso(_session_user.Id, Permiso.ExpedienteBaja))
                             {
-                                <button class="btn btn-danger" @onclick="() => EliminarExpediente(e.Id)">Eliminar</button>
+                                <button class="btn btn-danger" @onclick="() => ConfirmarEliminacion(e)">Eliminar</button>
                             }
                             <button class="btn btn-info" @onclick="() => VerTramites(e.Id)">Ver Trámites</button>
                         </td>
@@ -118,6 +121,7 @@ else
     private string busquedaId;
     private string? errorMensaje;
     private Usuario? _session_user;
+    DialogoConfirmacion dialogo = null!;
     
     private void AgregarExpediente(){
         Navegador.NavigateTo("agregar-expediente");
@@ -127,12 +131,24 @@ else
         Navegador.NavigateTo($"/modificar-expediente/{Id}");
     }
 
-    private void EliminarExpediente(int Id)
+    private void ConfirmarEliminacion(Expediente expediente)
+    {
+        if (dialogo != null)
+        {
+            dialogo.Mostrar(
+                $"¿Desea eliminar el expediente con ID #{expediente.Id}?",
+                EventCallback.Factory.Create(this, () => EliminarExpediente(expediente))
+            );
+        }
+    }
+
+    private void EliminarExpediente(Expediente expediente)
     {
         try
         {
-            CasoDeUsoExpedienteBaja.Ejecutar(Id, 1);
-            _expedientes = CasoDeUsoExpedienteConsultarTodos.Ejecutar(); 
+            CasoDeUsoExpedienteBaja.Ejecutar(expediente.Id, _session_user.Id);
+            _expedientes = CasoDeUsoExpedienteConsultarTodos.Ejecutar();
+            _expedienteFiltrado = null; 
         }
         catch (Exception e)
         {
