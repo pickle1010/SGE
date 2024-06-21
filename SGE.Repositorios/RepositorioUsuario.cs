@@ -11,6 +11,10 @@ public class RepositorioUsuario : IUsuarioRepositorio
     public void Agregar(Usuario usuario)
     {
         using var context = new SGEContext();
+        if(context.Usuarios.Where(u => u.Email == usuario.Email).SingleOrDefault() != null)
+        {
+            throw new RepositorioException($"Ya existe un usuario con el email #{usuario.Email}");
+        }
         context.Add(usuario);
         context.SaveChanges();
     }
@@ -58,6 +62,13 @@ public class RepositorioUsuario : IUsuarioRepositorio
         if(usuarioExistente == null){
             throw new RepositorioException($"No existe usuario que tenga el id #{usuario.Id}");
         }
+        if(usuario.Email != usuarioExistente.Email)
+        {
+            if(context.Usuarios.Where(u => u.Email == usuario.Email).SingleOrDefault() != null)
+            {
+                throw new RepositorioException($"Ya existe un usuario con el email #{usuario.Email}");
+            }
+        }
         usuario.Id = usuarioExistente.Id;
         usuarioExistente.Nombre = usuario.Nombre;
         usuarioExistente.Apellido = usuario.Apellido;
@@ -65,6 +76,5 @@ public class RepositorioUsuario : IUsuarioRepositorio
         usuarioExistente.Contraseña = usuario.Contraseña;
         context.SaveChanges();
     }
-
     
 }
