@@ -1,0 +1,127 @@
+@page "/mostrar-expediente/{Id:int}"
+@rendermode InteractiveServer
+@inject IServicioGestionDeSesion ServicioGestionDeSesion
+@inject CasoDeUsoExpedienteConsultarPorID CasoDeUsoExpedienteConsultarPorID
+@inject NavigationManager Navegador
+
+@if(_session_user == null)
+{
+    <PageTitle>SGE - Acceso denegado</PageTitle>
+    <h3>Acceso denegado</h3>
+    <p>Para ver este contenido debes iniciar sesion o registrarte.</p>
+}
+else
+{
+    <PageTitle>SGE - Trámites del Expediente</PageTitle>
+
+    <h3>Información detallada del Expediente con ID #@Id</h3>
+
+    @if (!string.IsNullOrEmpty(errorMensaje))
+    {
+        <div class="alert alert-danger">@errorMensaje</div>
+    }
+
+    @if (_expediente != null)
+    {
+        <div>
+            <h4>Información del Expediente</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Caratula</th>
+                        <th>Estado</th>
+                        <th>Fecha y Hora de Creacion</th>
+                        <th>Fecha y Hora de Modificación</th>
+                        <th>Modificado por</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@_expediente.Id</td>
+                        <td>@_expediente.Caratula</td>
+                        <td>@_expediente.Estado</td>
+                        <td>@_expediente.FechaHoraCreacion</td>
+                        <td>@_expediente.FechaHoraUltimaModificacion</td>
+                        <td>@_expediente.IdUsuarioUltimaModificacion</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h4>Información de los Trámites</h4>
+            @if (_tramites != null && _tramites.Count > 0)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>ExpedienteId</th>
+                            <th>Etiqueta</th>
+                            <th>Contenido</th>
+                            <th>Fecha y Hora de Creacion</th>
+                            <th>Fecha y Hora de Modificación</th>
+                            <th>Modificado por</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in _tramites)
+                        {
+                            <tr>
+                                <td>@t.Id</td>
+                                <td>@t.ExpedienteId</td>
+                                <td>@t.Etiqueta</td>
+                                <td>@t.Contenido</td>
+                                <td>@t.FechaHoraCreacion</td>
+                                <td>@t.FechaHoraUltimaModificacion</td>
+                                <td>@t.IdUsuarioUltimaModificacion</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No hay trámites para este expediente.</p>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No se pudo cargar la información del expediente.</p>
+    }
+
+    <button class="btn btn-secondary" @onclick="Regresar">Regresar</button>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private Expediente _expediente;
+    private List<Tramite> _tramites;
+    private string errorMensaje;
+    private Usuario? _session_user;
+
+    protected override void OnInitialized()
+    {
+        _session_user = ServicioGestionDeSesion.ObtenerUsuario();
+    }
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            _expediente = CasoDeUsoExpedienteConsultarPorID.Ejecutar(Id);
+            _tramites = _expediente.Tramites;
+        }
+        catch (Exception e)
+        {
+            errorMensaje = "Error al cargar los datos: " + e.Message;
+        }
+    }
+
+    private void Regresar()
+    {
+        Navegador.NavigateTo("/expedientes");
+    }
+}

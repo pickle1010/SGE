@@ -1,0 +1,59 @@
+@page "/agregar-expediente"
+@rendermode InteractiveServer
+@inject IServicioGestionDeSesion ServicioGestionDeSesion
+@inject CasoDeUsoExpedienteAlta CasoDeUsoExpedienteAlta
+@inject NavigationManager Navegador
+
+@if(_session_user == null)
+{
+    <PageTitle>SGE - Acceso denegado</PageTitle>
+    <h3>Acceso denegado</h3>
+    <p>Para ver este contenido debes iniciar sesion o registrarte.</p>
+}
+else
+{
+    <PageTitle>SGE - Agregar Expediente</PageTitle>
+    <h3>Agregar Expediente</h3>
+
+    <EditForm Model="@expediente" OnValidSubmit="AgregarExpedienteValido">
+        <div>
+            <label for="Caratula">Caratula:</label>
+            <InputText id="caratula" @bind-Value="expediente.Caratula" />
+        </div>
+
+        <div class="form-group">
+            <label for="Estado">Estado:</label>
+            <InputSelect id="estado" class="form-control" @bind-Value="expediente.Estado">
+                @foreach (var estado in Enum.GetValues(typeof(EstadoExpediente)))
+                {
+                    <option value="@estado">@estado</option>
+                }
+            </InputSelect>
+        </div>
+
+        <button type="submit">Agregar</button>
+    </EditForm>
+}
+
+@code {
+    private Expediente expediente = new Expediente();
+    private Usuario? _session_user;
+
+    protected override void OnInitialized()
+    {
+        _session_user = ServicioGestionDeSesion.ObtenerUsuario();
+    }
+
+    private void AgregarExpedienteValido()
+    {
+        try
+        {
+            CasoDeUsoExpedienteAlta.Ejecutar(expediente, _session_user.Id);
+            Navegador.NavigateTo("expedientes");
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine("Expediente Invalido: " + e.Message);
+        }
+    }
+}

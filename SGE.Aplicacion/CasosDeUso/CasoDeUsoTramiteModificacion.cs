@@ -1,6 +1,6 @@
 ﻿namespace SGE.Aplicacion;
 
-public class CasoDeUsoTramiteModificacion(ITramiteRepositorio repo, TramiteValidador validador, IServicioAutorizacion servicioAutorizacion, IServicioActualizacionEstado servicioActualizacion)
+public class CasoDeUsoTramiteModificacion(ITramiteRepositorio repo, TramiteValidador validador, IServicioAutorizacion servicioAutorizacion, IServicioActualizacionEstado servicioActualizacion, IExpedienteRepositorio repoExpediente)
 {
     public void Ejecutar(Tramite tramite, int idUsuario)
     {
@@ -15,6 +15,7 @@ public class CasoDeUsoTramiteModificacion(ITramiteRepositorio repo, TramiteValid
         {
             throw new ValidacionException(mensajeError);
         }
+        Expediente expedienteBuscado = repoExpediente.ConsultarPorID(tramite.ExpedienteId);
         tramite.FechaHoraUltimaModificacion = DateTime.Now;
         tramite.IdUsuarioUltimaModificacion = idUsuario;
         repo.Modificar(tramite);

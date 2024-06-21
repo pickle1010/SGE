@@ -1,0 +1,70 @@
+@page "/modificar-expediente/{id:int}"
+@rendermode InteractiveServer
+@inject IServicioGestionDeSesion ServicioGestionDeSesion
+@inject CasoDeUsoExpedienteModificacion CasoDeUsoExpedienteModificacion
+@inject CasoDeUsoExpedienteConsultarPorID CasoDeUsoExpedienteConsultarPorID
+@inject NavigationManager Navegador
+
+@if(_session_user == null)
+{
+    <PageTitle>SGE - Acceso denegado</PageTitle>
+    <h3>Acceso denegado</h3>
+    <p>Para ver este contenido debes iniciar sesion o registrarte.</p>
+}
+else
+{
+    <PageTitle>SGE - Modificar Expediente</PageTitle>
+    <h3>Editar Expediente</h3>
+
+    <EditForm Model="@expediente" OnValidSubmit="ModificarExpedienteValido">
+        <div>
+            <label for="Caratula">Caratula:</label>
+            <InputText id="caratula" @bind-Value="expediente.Caratula" />
+        </div>
+
+        <div class="form-group">
+            <label for="Estado">Estado:</label>
+            <InputSelect id="estado" class="form-control" @bind-Value="expediente.Estado">
+                @foreach (var estado in Enum.GetValues(typeof(EstadoExpediente)))
+                {
+                    <option value="@estado">@estado</option>
+                }
+            </InputSelect>
+        </div>
+
+        <button type="submit">Modificar</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+    private Expediente expediente = new Expediente();
+    private Usuario? _session_user;
+
+    protected override void OnInitialized()
+    {
+        _session_user = ServicioGestionDeSesion.ObtenerUsuario();
+        try
+        {
+            expediente = CasoDeUsoExpedienteConsultarPorID.Ejecutar(id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error al cargar el expediente: " + e.Message);
+            // Manejo de errores adicional si es necesario
+        }
+    }
+
+    private void ModificarExpedienteValido()
+    {
+        try
+        {
+            CasoDeUsoExpedienteModificacion.Ejecutar(expediente, _session_user.Id);
+            Navegador.NavigateTo("expedientes");
+        }   
+        catch (Exception e)
+        {
+            Console.WriteLine("Expediente Invalido: " + e.Message);
+        }
+    }
+}

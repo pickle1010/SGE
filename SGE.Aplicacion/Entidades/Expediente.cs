@@ -12,6 +12,10 @@ public class Expediente
     public DateTime FechaHoraUltimaModificacion { get; set; }
     public int IdUsuarioUltimaModificacion { get; set; }
 
+    public Expediente(){
+        
+    }
+
     public Expediente(string caratula) {
         Caratula = caratula;
         Estado = EstadoExpediente.RecienIniciado;

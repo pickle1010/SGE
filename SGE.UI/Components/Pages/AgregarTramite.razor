@@ -1,0 +1,65 @@
+@page "/agregar-tramite"
+@rendermode InteractiveServer
+@inject IServicioGestionDeSesion ServicioGestionDeSesion
+@inject CasoDeUsoTramiteAlta CasoDeUsoTramiteAlta
+@inject NavigationManager Navegador
+
+@if(_session_user == null)
+{
+    <PageTitle>SGE - Acceso denegado</PageTitle>
+    <h3>Acceso denegado</h3>
+    <p>Para ver este contenido debes iniciar sesion o registrarte.</p>
+}
+else
+{
+    <PageTitle>SGE - Agregar Tramite</PageTitle>
+    <h3>Agregar Tramite</h3>
+
+    <EditForm Model="@tramite" OnValidSubmit="AgregarTramiteValido">
+        
+        <div class="form-group">
+            <label for="IDExpediente">ID Expediente:</label>
+            <InputNumber id="idExpediente" @bind-Value="tramite.ExpedienteId" />
+        </div>    
+
+        <div>
+            <label for="Contenido">Contenido:</label>
+            <InputText id="contenido" @bind-Value="tramite.Contenido" />
+        </div>
+
+        <div class="form-group">
+            <label for="Etiqueta">Etiqueta:</label>
+            <InputSelect id="etiqueta" class="form-control" @bind-Value="tramite.Etiqueta">
+                @foreach (var etiqueta in Enum.GetValues(typeof(EtiquetaTramite)))
+                {
+                    <option value="@etiqueta">@etiqueta</option>
+                }
+            </InputSelect>
+        </div>
+
+        <button type="submit">Agregar</button>
+    </EditForm>
+}
+
+@code {
+    private Tramite tramite= new Tramite();
+    private Usuario? _session_user;
+
+    protected override void OnInitialized()
+    {
+        _session_user = ServicioGestionDeSesion.ObtenerUsuario();
+    }
+
+    private void AgregarTramiteValido()
+    {
+        try
+        {
+            CasoDeUsoTramiteAlta.Ejecutar(tramite, _session_user.Id);
+            Navegador.NavigateTo("tramites");
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine("Tramite Invalido: " + e.Message);
+        }
+    }
+}
