@@ -7,17 +7,22 @@
 <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
     <div>
         <label for="email">Correo Electrónico:</label>
-        <InputText id="email" @bind-Value="loginModel.Email" />
+        <InputText required id="email" @bind-Value="loginModel.Email" />
     </div>
     <div>
         <label for="password">Contraseña:</label>
-        <InputText id="password" type="password" @bind-Value="loginModel.Password" />
+        <InputText required id="password" type="password" @bind-Value="loginModel.Password" />
     </div>
     <button type="submit">Iniciar Sesión</button>
 </EditForm>
 
+@if (mensaje != ""){
+    <p style="color: red">@mensaje</p>
+}
+
 @code {
     private LoginModel loginModel = new LoginModel();
+    private string mensaje = "";
 
     private void HandleLogin()
     {
@@ -37,6 +42,7 @@
         catch (Exception e)
         {
             // Manejar errores de inicio de sesión
+            mensaje = e.Message;
             Console.WriteLine("Inicio de sesión fallido:\n" + e.Message);
         }
     }
