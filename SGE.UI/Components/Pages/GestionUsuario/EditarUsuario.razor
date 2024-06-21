@@ -33,8 +33,6 @@ else
         {
             <div class="alert alert-danger">@errorMensaje</div>
         }
-
-        <h4>Modificando al Usuario "@_usuario.Nombre"</h4>
     }
 
     <EditForm Model="@_edited_user" OnValidSubmit="ModificarUsuarioValido">
@@ -156,6 +154,7 @@ else
             if (editandoPerfil)
             {
                 CasoDeUsoUsuarioEditarPerfil.Ejecutar(_usuario, _session_user.Id, passwordCambiada);
+                ServicioGestionDeSesion.IniciarSesion(_usuario);
             }
             else
             {
