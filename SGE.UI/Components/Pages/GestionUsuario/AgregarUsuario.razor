@@ -1,35 +1,52 @@
 @page "/agregar-usuario"
 @rendermode InteractiveServer
 @inject IServicioGestionDeSesion ServicioGestionDeSesion
+@inject IServicioAutorizacion ServicioAutorizacion
 @inject CasoDeUsoUsuarioAlta CasoDeUsoUsuarioAlta
 @inject CasoDeUsoUsuarioRegistrar CasoDeUsoUsuarioRegistrar
 @inject NavigationManager Navegador
 
-<PageTitle>SGE - Agregar Usuario</PageTitle>
-<h3>Agregar Usuario</h3>
+@if(!usuarioAutorizado)
+{
+    <h3>Acceso denegado</h3>
+    <p>No tienes permiso para ver este contenido.</p>
+}
+else
+{
+    <PageTitle>SGE - Agregar Usuario</PageTitle>
+    <h3>Agregar Usuario</h3>
 
-<EditForm Model="@usuario" OnValidSubmit="AgregarUsuarioValido">
-    <div>
-        <label for="nombre">Nombre:</label>
-        <InputText id="nombre" @bind-Value="usuario.Nombre" />
-    </div>
-    <div>
-        <label for="apellido">Apellido:</label>
-        <InputText id="apellido" @bind-Value="usuario.Apellido" />
-    </div>
-    <div>
-        <label for="email">Correo Electrónico:</label>
-        <InputText id="email" @bind-Value="usuario.Email" />
-    </div>
-    <div>
-        <label for="contraseña">Contraseña:</label>
-        <InputText id="contraseña" type="password" @bind-Value="usuario.Contraseña" />
-    </div>
-    <button type="submit">Agregar</button>
-</EditForm>
+    <EditForm Model="@usuario" OnValidSubmit="AgregarUsuarioValido">
+        <div>
+            <label for="nombre">Nombre:</label>
+            <InputText id="nombre" @bind-Value="usuario.Nombre" />
+        </div>
+        <div>
+            <label for="apellido">Apellido:</label>
+            <InputText id="apellido" @bind-Value="usuario.Apellido" />
+        </div>
+        <div>
+            <label for="email">Correo Electrónico:</label>
+            <InputText id="email" @bind-Value="usuario.Email" />
+        </div>
+        <div>
+            <label for="contraseña">Contraseña:</label>
+            <InputText id="contraseña" type="password" @bind-Value="usuario.Contraseña" />
+        </div>
+        <button type="submit">Agregar</button>
+    </EditForm>
+}
 
 @code {
     private Usuario usuario = new Usuario();
+    private Usuario? _session_user;
+    private bool usuarioAutorizado = false;
+
+    protected override void OnInitialized()
+    {
+        _session_user = ServicioGestionDeSesion.ObtenerUsuario();
+        usuarioAutorizado = _session_user != null && _session_user.EsAdmin;
+    }
 
     private void AgregarUsuarioValido()
     {

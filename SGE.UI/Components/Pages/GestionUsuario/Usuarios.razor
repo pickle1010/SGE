@@ -1,55 +1,71 @@
 @page "/usuarios"
 @rendermode InteractiveServer
+@inject IServicioGestionDeSesion ServicioGestionDeSesion
 @inject CasoDeUsoUsuarioConsultarTodos CasoDeUsoUsuarioConsultarTodos
 @inject CasoDeUsoUsuarioBaja CasoDeUsoUsuarioBaja
 @inject NavigationManager Navegador
 
-<PageTitle>SGE - Usuarios</PageTitle>
-<button class="btn btn-primary" @onclick="AgregarUsuario">Agregar usuario</button>
+@if(!usuarioAutorizado)
+{
+    <h3>Acceso denegado</h3>
+    <p>No tienes permiso para ver este contenido.</p>
+}
+else
+{
+    <PageTitle>SGE - Usuarios</PageTitle>
+    <button class="btn btn-primary" @onclick="AgregarUsuario">Agregar usuario</button>
 
-<DialogoConfirmacion @ref="dialogo"/>
+    <DialogoConfirmacion @ref="dialogo"/>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Email</th>
-            <th></th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var u in _usuarios)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <td>@u.Id</td>
-                <td>@u.Nombre</td>
-                <td>@u.Apellido</td>
-                <td>@u.Email</td>
-                <td>@(u.EsAdmin ? " Admin " : " ")</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="()=>EditarUsuario(u)">
-                        Editar
-                    </button>
-                    <button class="btn btn-danger"@onclick="()=>ConfirmarEliminacion(u)">
-                        Eliminar
-                    </button>
-                </td>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th></th>
+                <th>Acciones</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var u in _usuarios)
+            {
+                <tr>
+                    <td>@u.Id</td>
+                    <td>@u.Nombre</td>
+                    <td>@u.Apellido</td>
+                    <td>@u.Email</td>
+                    <td>@(u.EsAdmin ? " Admin " : " ")</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="()=>EditarUsuario(u)">
+                            Editar
+                        </button>
+                        <button class="btn btn-danger"@onclick="()=>ConfirmarEliminacion(u)">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
     private List<Usuario> _usuarios;
     private Usuario usuario = new Usuario();
+    private Usuario? _session_user;
+    private bool usuarioAutorizado = false;
     DialogoConfirmacion dialogo = null!;
 
     protected override void OnInitialized()
     {
-        _usuarios = CasoDeUsoUsuarioConsultarTodos.Ejecutar();
+        _session_user = ServicioGestionDeSesion.ObtenerUsuario();
+        usuarioAutorizado = _session_user != null && _session_user.EsAdmin;
+        if(usuarioAutorizado)
+        {
+            _usuarios = CasoDeUsoUsuarioConsultarTodos.Ejecutar();
+        }
     }
 
     // Alta de Usuarios
@@ -62,7 +78,6 @@
     {
         Navegador.NavigateTo($"editar-usuario/{usuario.Id}");
     }
-
 
     // Baja de Usuarios Mensaje confirmacion
     private void ConfirmarEliminacion(Usuario usuario)
@@ -81,6 +96,4 @@
         CasoDeUsoUsuarioBaja.Ejecutar(usuario.Id, 1);
         _usuarios = CasoDeUsoUsuarioConsultarTodos.Ejecutar();
     }
-
-    
 }

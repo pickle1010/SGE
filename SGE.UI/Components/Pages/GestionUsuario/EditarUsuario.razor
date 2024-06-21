@@ -6,60 +6,79 @@
 @inject CasoDeUsoUsuarioEditarPerfil CasoDeUsoUsuarioEditarPerfil
 @inject NavigationManager Navegador
 
-@if(editandoPerfil)
+@if(!usuarioAutorizado)
 {
-    <PageTitle>SGE - Editar Mi Perfil</PageTitle>
-    <h3>Editar Mi Perfil</h3>
+    <h3>Acceso denegado</h3>
+    <p>No tienes permiso para ver este contenido.</p>
 }
 else
 {
-    <PageTitle>SGE - Editar Usuario</PageTitle>
-    <h3>Editar Usuario</h3>
-    <h4>Modificando al Usuario "@_usuario.Nombre"</h4>
+    @if(editandoPerfil)
+    {
+        <PageTitle>SGE - Editar Mi Perfil</PageTitle>
+        <h3>Editar Mi Perfil</h3>
+    }
+    else
+    {
+        <PageTitle>SGE - Editar Usuario</PageTitle>
+        <h3>Editar Usuario</h3>
+        <h4>Modificando al Usuario "@_usuario.Nombre"</h4>
+    }
+
+    <EditForm Model="@_usuario" OnValidSubmit="ModificarUsuarioValido">
+        <div>
+            <label for="nombre">Nombre:</label>
+            <InputText id="nombre" @bind-Value="_usuario.Nombre" />
+        </div>
+        <div>
+            <label for="apellido">Apellido:</label>
+            <InputText id="apellido" @bind-Value="_usuario.Apellido" />
+        </div>
+        <div>
+            <label for="email">Correo Electrónico:</label>
+            <InputText id="email" @bind-Value="_usuario.Email" />
+        </div>
+        <div>
+            <label for="contraseña">Contraseña:</label>
+            <InputText id="contraseña" type="password" @bind-Value="_usuario.Contraseña" />
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    </EditForm>
 }
 
-<EditForm Model="@_usuario" OnValidSubmit="ModificarUsuarioValido">
-    <div>
-        <label for="nombre">Nombre:</label>
-        <InputText id="nombre" @bind-Value="_usuario.Nombre" />
-    </div>
-    <div>
-        <label for="apellido">Apellido:</label>
-        <InputText id="apellido" @bind-Value="_usuario.Apellido" />
-    </div>
-    <div>
-        <label for="email">Correo Electrónico:</label>
-        <InputText id="email" @bind-Value="_usuario.Email" />
-    </div>
-    <div>
-        <label for="contraseña">Contraseña:</label>
-        <InputText id="contraseña" type="password" @bind-Value="_usuario.Contraseña" />
-    </div>
-    <button type="submit" class="btn btn-primary">Guardar cambios</button>
-</EditForm>
-
 @code {
-    Usuario _usuario = new Usuario();
-    string? password;
-    Usuario? _session_user;
-    bool passwordCambiada = false;
-    bool editandoPerfil = false;
+    private bool usuarioAutorizado = false;
+
+    private Usuario _usuario = new Usuario();
+    private string? password;
+    private Usuario? _session_user;
+    private bool passwordCambiada = false;
+    private bool editandoPerfil = false;
     [Parameter] public int id { get; set; }
 
     protected override void OnInitialized()
     {
         _session_user = ServicioGestionDeSesion.ObtenerUsuario();
-        try
+        usuarioAutorizado = _session_user != null;
+        if(usuarioAutorizado)
         {
-            _usuario = CasoDeUsoUsuarioConsultarPorId.Ejecutar(id);
-            password = _usuario.Contraseña;
-            _usuario.Contraseña = "";
-            editandoPerfil = (_session_user.Id == _usuario.Id);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("Error al cargar el usuario: " + e.Message);
-            // Manejo de errores adicional si es necesario
+            try
+            {
+                _usuario = CasoDeUsoUsuarioConsultarPorId.Ejecutar(id);
+                usuarioAutorizado = usuarioAutorizado && (_session_user.EsAdmin || _session_user.Id == _usuario.Id);
+                if(usuarioAutorizado)
+                {
+                    password = _usuario.Contraseña;
+                    _usuario.Contraseña = "";
+                    editandoPerfil = (_session_user.Id == _usuario.Id);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error al cargar el usuario: " + e.Message);
+                usuarioAutorizado = false;
+                // Manejo de errores adicional si es necesario
+            }
         }
     }
 
